@@ -122,6 +122,10 @@ function initMap() {
         });
         // Push the marker to our array of markers.
         markers.push(marker);
+
+        // creates links on the left panel
+        $('#markers').append('<a class="marker-link" data-markerid="' + i + '" href="#">' + locations()[i].title + '</a><br><br>');
+
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function() {
             var inthisfunc = this;
@@ -134,8 +138,12 @@ function initMap() {
         });
         bounds.extend(markers[i].position);
     };
-
-
+    // Creates click event that opens the info window from the link on the left panel
+    $('.marker-link').on('click', function() {
+        google.maps.event.trigger(markers[$(this).data('markerid')], 'click');
+    });
+    
+    // fits the marker area into the browser window
     map.fitBounds(bounds);
 
     function populateInfoWindow(marker, infowindow) {
