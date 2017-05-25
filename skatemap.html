@@ -14,15 +14,10 @@
     </thead>
     <tbody data-bind="foreach: spots" id="locationtitle">
         <tr>
-<!--
-            Below works with the URL, had to remove because hadnt formed a url yet
-            <td><a data-bind="text: title, attr: {href: url}" target="_new"></a></td>
--->
-            <td><a data-bind="text: title, attr: {href: url}" target="_new"></a></td>
-           
+            <td><a data-bind="text: title, attr: {'data-markerid': $index}" href="#" class="marker-link" ></a></td>
         </tr>
     </tbody>
-</table>
+</table><div id="markers"></div>
     </div>
     <div id="maincontainer">
         <div id="nav"><h1>Maps to the skaters....Holmes!</h1></div>
