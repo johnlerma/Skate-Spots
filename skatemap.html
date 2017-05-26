@@ -7,14 +7,58 @@
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 </head>
 
-<body><div id="list">
+<body>
+    <div id="list">
+<!--
+        <div id="filter">
+1: <input type="checkbox" value="1" data-bind="checked: filters" /><br/>
+2: <input type="checkbox" value="2" data-bind="checked: filters" /><br/>
+            <hr/>
+<ul data-bind="foreach: filteredPeople">
+    <li data-bind="text: name"></li>
+</ul>
+    </div><br><br>
+-->
+        
+<h2>Planets</h2>
+<p> 
+    <label>
+        <input type='checkbox' data-bind='checked: displayAdvancedOptions' />
+        Display advanced options
+    </label>
+</p>
+ 
+<p data-bind='fadeVisible: displayAdvancedOptions'>
+    Show:
+    <label><input type='radio'  value='all' data-bind='checked: typeToShow' />All</label><br><br>
+    <label><input type='radio'  value='stairs' data-bind='checked: typeToShow' />stairs </label><br><br>
+    <label><input type='radio'  value='ledges' data-bind='checked: typeToShow' />ledges </label><br><br>
+    <label><input type='radio'  value='bank' data-bind='checked: typeToShow' />bank </label>
+</p>
+ 
+<div data-bind='template: { foreach: planetsToShow,
+                            beforeRemove: hidePlanetElement,
+                            afterAdd: showPlanetElement }'>
+    <div data-bind='attr: { "class": "" + type }, text: title'><br><br> </div>
+</div>
+ 
+<p data-bind='fadeVisible: displayAdvancedOptions'>
+    <button data-bind='click: addPlanet.bind($data, "stairs")'>Add rocky planet</button>
+    <button data-bind='click: addPlanet.bind($data, "ledges")'>Add gas giant</button>
+</p>
+
+        
+        
+        
+        
+        
     <table>
     <thead>
-        <tr><th>Spots</th></tr>
+        <tr><th><Br><br></th></tr>
     </thead>
     <tbody data-bind="foreach: spots" id="locationtitle">
         <tr>
-            <td><a data-bind="text: title, attr: {'data-markerid': $index}" href="#" class="marker-link" ></a></td>
+            <td><a data-bind="text: title, attr: {'data-markerid': $index}" href="#" class="marker-link" ></a><br><br></td>
         </tr>
     </tbody>
 </table><div id="markers"></div>
