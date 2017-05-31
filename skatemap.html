@@ -36,9 +36,9 @@
     <label><input type='radio'  value='bank' data-bind='checked: typeToShow' />bank </label>
 </p>
  
-<div data-bind='template: { foreach: planetsToShow,
-                            beforeRemove: hidePlanetElement,
-                            afterAdd: showPlanetElement }'>
+<div data-bind='template: { foreach: listToShow,
+                            beforeRemove: hidelistElement,
+                            afterAdd: showlistElement }'>
     <div> <a data-bind="text: title, attr: {'data-markerid': numid}" href="#" class="marker-link"> </a></div>
 </div>
  
