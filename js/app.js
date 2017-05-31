@@ -4,6 +4,7 @@ var spots = ko.observableArray([{
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
         type: 'stairs',
+        numid: '0',
         location: {
             lat: 37.7802,
             lng: -122.446864
@@ -15,6 +16,7 @@ var spots = ko.observableArray([{
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
         type: 'ledges',
+        numid: '1',
         location: {
             lat: 37.749408,
             lng: -122.43222
@@ -25,6 +27,7 @@ var spots = ko.observableArray([{
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
         type: 'skatepark',
+        numid: '2',
         location: {
             lat: 37.769155,
             lng: -122.405325
@@ -35,6 +38,7 @@ var spots = ko.observableArray([{
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
         type: 'ledges',
+        numid: '3',
         location: {
             lat: 37.798694,
             lng: -122.396752
@@ -45,6 +49,7 @@ var spots = ko.observableArray([{
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
         type: 'bank',
+        numid: '4',
         location: {
             lat: 37.783255,
             lng: -122.508833
@@ -72,15 +77,10 @@ var ViewModel = function() {
 
     
     this.typeToShow = ko.observable("all");
-
+    /// probably wont need this..well can use it to hide the filter
     this.displayAdvancedOptions = ko.observable(false);
     
-     this.addPlanet = function(type) {
-        this.planets.push({
-            name: "New planet",
-            type: type
-        });
-    };
+ 
     
     this.planetsToShow = ko.pureComputed(function() {
         // Represents a filtered list of planets
@@ -131,6 +131,7 @@ function initMap() {
     for (var i = 0; i < spots().length; i++) {
         var position = spots()[i].location;
         var title = spots()[i].title;
+        var numid = spots()[i].numid;
         var icon = spots()[i].icon;
         var that = this;
         // Create a marker per location, and put into markers array.
@@ -139,6 +140,7 @@ function initMap() {
             position: position,
             title: title,
             icon: icon,
+            numid: numid,
             animation: google.maps.Animation.DROP,
             id: i
         });
@@ -163,6 +165,7 @@ function initMap() {
     // Creates click event that opens the info window from the link on the left panel
     $('.marker-link').on('click', function() {
         google.maps.event.trigger(markers[$(this).data('markerid')], 'click');
+        
     });
     
     // fits the marker area into the browser window
@@ -174,9 +177,20 @@ function initMap() {
             infowindow.setContent('');
             infowindow.marker = marker;
             // Make sure the marker property is cleared if the infowindow is closed.
+            var infoWindowClosed = false;
+            
+            console.log(infoWindowClosed);
+            // infowindow listens for a closed click
             infowindow.addListener('closeclick', function() {
-                infowindow.setMarker = null;
+                
+               // infowindow.setMarker = null;
+               // infoWindowClosed = true;
+               // console.log(infoWindowClosed);
             });
+            if(infoWindowClosed){
+                infowindow.open(map, marker); 
+                infoWindowClosed = false;
+            };
             var streetViewService = new google.maps.StreetViewService();
             var radius = 50;
                // In case the status is OK, which means the pano was found, compute the
@@ -185,10 +199,10 @@ function initMap() {
           function getStreetView(data, status) {
             if (status == google.maps.StreetViewStatus.OK) {
               var nearStreetViewLocation = data.location.latLng;
-                console.log(nearStreetViewLocation + " this var");
               var heading = google.maps.geometry.spherical.computeHeading(
                 nearStreetViewLocation, marker.position);
-                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+              var infoContent = '<div>' + marker.title + '</div><div id="pano"></div>';
+                infowindow.setContent(infoContent);
                 var panoramaOptions = {
                   position: nearStreetViewLocation,
                   pov: {
