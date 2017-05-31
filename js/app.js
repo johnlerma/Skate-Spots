@@ -12,7 +12,7 @@ var spots = ko.observableArray([{
     },
     {
         title: 'Clipper Hubba',
-         name: 'ccccc',
+        name: 'ccccc',
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
         type: 'ledges',
@@ -57,33 +57,15 @@ var spots = ko.observableArray([{
     }
 ]);
 
-
-
- var planets = ko.observableArray([
-        { name: "Mercury", type: "rock"},
-        { name: "Venus", type: "rock"},
-        { name: "Earth", type: "rock"},
-        { name: "Mars", type: "rock"},
-        { name: "Jupiter", type: "gasgiant"},
-        { name: "Saturn", type: "gasgiant"},
-        { name: "Uranus", type: "gasgiant"},
-        { name: "Neptune", type: "gasgiant"}
-    ]);
-
 var ViewModel = function() {
     var self = this;
     this.displayMessage = ko.observable(true);
     this.spotList = ko.observableArray([]);
-
-    
     this.typeToShow = ko.observable("all");
-    /// probably wont need this..well can use it to hide the filter
     this.displayAdvancedOptions = ko.observable(false);
-    
- 
-    
-    this.planetsToShow = ko.pureComputed(function() {
-        // Represents a filtered list of planets
+
+    this.listToShow = ko.pureComputed(function() {
+        // Represents a filtered list of skatespots
         // i.e., only those matching the "typeToShow" condition
         var desiredType = this.typeToShow();
         if (desiredType == "all") return spots();
@@ -91,11 +73,17 @@ var ViewModel = function() {
             return spot.type == desiredType;
         });
     }, this);
-    
-     // Animation callbacks for the planets list
-    this.showPlanetElement = function(elem) { if (elem.nodeType === 1) $(elem).hide().slideDown() }
-    this.hidePlanetElement = function(elem) { if (elem.nodeType === 1) $(elem).slideUp(function() { $(elem).remove(); }) }
-    
+
+    // Animation callbacks for the  list
+    this.showlistElement = function(elem) {
+        if (elem.nodeType === 1) $(elem).hide().slideDown()
+    };
+    this.hidelistElement = function(elem) {
+        if (elem.nodeType === 1) $(elem).slideUp(function() {
+            $(elem).remove();
+        });
+    };
+
 };
 
 ko.bindingHandlers.fadeVisible = {
@@ -127,7 +115,6 @@ function initMap() {
     var largeInfowindow = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
 
-
     for (var i = 0; i < spots().length; i++) {
         var position = spots()[i].location;
         var title = spots()[i].title;
@@ -147,8 +134,6 @@ function initMap() {
         // Push the marker to our array of markers.
         markers.push(marker);
 
-        // creates links on the left panel
-//        $('#markers').append('<a class="marker-link" data-markerid="' + i + '" href="#">' + locations()[i].title + '</a><br><br>');
 
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function() {
@@ -165,9 +150,9 @@ function initMap() {
     // Creates click event that opens the info window from the link on the left panel
     $('.marker-link').on('click', function() {
         google.maps.event.trigger(markers[$(this).data('markerid')], 'click');
-        
+
     });
-    
+
     // fits the marker area into the browser window
     map.fitBounds(bounds);
 
@@ -178,58 +163,53 @@ function initMap() {
             infowindow.marker = marker;
             // Make sure the marker property is cleared if the infowindow is closed.
             var infoWindowClosed = false;
-            
+
             console.log(infoWindowClosed);
             // infowindow listens for a closed click
             infowindow.addListener('closeclick', function() {
-                
-               // infowindow.setMarker = null;
-               // infoWindowClosed = true;
-               // console.log(infoWindowClosed);
+
+                // infowindow.setMarker = null;
+                // infoWindowClosed = true;
+                // console.log(infoWindowClosed);
             });
-            if(infoWindowClosed){
-                infowindow.open(map, marker); 
+            if (infoWindowClosed) {
+                infowindow.open(map, marker);
                 infoWindowClosed = false;
             };
             var streetViewService = new google.maps.StreetViewService();
             var radius = 50;
-               // In case the status is OK, which means the pano was found, compute the
-          // position of the streetview image, then calculate the heading, then get a
-          // panorama from that and set the options
-          function getStreetView(data, status) {
-            if (status == google.maps.StreetViewStatus.OK) {
-              var nearStreetViewLocation = data.location.latLng;
-              var heading = google.maps.geometry.spherical.computeHeading(
-                nearStreetViewLocation, marker.position);
-              var infoContent = '<div>' + marker.title + '</div><div id="pano"></div>';
-                infowindow.setContent(infoContent);
-                var panoramaOptions = {
-                  position: nearStreetViewLocation,
-                  pov: {
-                    heading: heading,
-                    pitch: 30
-                  }
-                };
-              var panorama = new google.maps.StreetViewPanorama(
-                document.getElementById('pano'), panoramaOptions);
-            } else {
-              infowindow.setContent('<div>' + marker.title + '</div>' +
-                '<div>No Street View Found</div>');
+            // In case the status is OK, which means the pano was found, compute the
+            // position of the streetview image, then calculate the heading, then get a
+            // panorama from that and set the options
+            function getStreetView(data, status) {
+                if (status == google.maps.StreetViewStatus.OK) {
+                    var nearStreetViewLocation = data.location.latLng;
+                    var heading = google.maps.geometry.spherical.computeHeading(
+                        nearStreetViewLocation, marker.position);
+                    var infoContent = '<div>' + marker.title + '</div><div id="pano"></div>';
+                    infowindow.setContent(infoContent);
+                    var panoramaOptions = {
+                        position: nearStreetViewLocation,
+                        pov: {
+                            heading: heading,
+                            pitch: 30
+                        }
+                    };
+                    var panorama = new google.maps.StreetViewPanorama(
+                        document.getElementById('pano'), panoramaOptions);
+                } else {
+                    infowindow.setContent('<div>' + marker.title + '</div>' +
+                        '<div>No Street View Found</div>');
+                }
             }
-          }
-           // Use streetview service to get the closest streetview image within
-          // 50 meters of the markers position
-          streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+            // Use streetview service to get the closest streetview image within
+            // 50 meters of the markers position
+            streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
             console.log(marker.position + "dis");
-          // Open the infowindow on the correct marker.
-          infowindow.open(map, marker); 
-            
+            // Open the infowindow on the correct marker.
+            infowindow.open(map, marker);
         }
     }
-
 }
-//var createMap = initMap();
-//ko.applyBindings({
-//    displayMessage: ko.observable(true)
-//});
+
 ko.applyBindings(new ViewModel());
