@@ -20,7 +20,7 @@
     </div><br><br>
 -->
         
-<h2>Planets</h2>
+<h2>Skate Spots</h2>
 <p> 
     <label>
         <input type='checkbox' data-bind='checked: displayAdvancedOptions' />
@@ -39,32 +39,12 @@
 <div data-bind='template: { foreach: planetsToShow,
                             beforeRemove: hidePlanetElement,
                             afterAdd: showPlanetElement }'>
-    <div data-bind='attr: { "class": "" + type }, text: title'><br><br> </div>
+    <div> <a data-bind="text: title, attr: {'data-markerid': numid}" href="#" class="marker-link"> </a></div>
 </div>
  
-<p data-bind='fadeVisible: displayAdvancedOptions'>
-    <button data-bind='click: addPlanet.bind($data, "stairs")'>Add rocky planet</button>
-    <button data-bind='click: addPlanet.bind($data, "ledges")'>Add gas giant</button>
-</p>
-
-        
-        
-        
-        
-        
-    <table>
-    <thead>
-        <tr><th><Br><br></th></tr>
-    </thead>
-    <tbody data-bind="foreach: spots" id="locationtitle">
-        <tr>
-            <td><a data-bind="text: title, attr: {'data-markerid': $index}" href="#" class="marker-link" ></a><br><br></td>
-        </tr>
-    </tbody>
-</table><div id="markers"></div>
     </div>
     <div id="maincontainer">
-        <div id="nav"><h1>Maps to the skaters....Holmes!</h1></div>
+        <div id="nav"><h1>Skate Map</h1></div>
         <div id="map"></div>
     </div>
      <script src="js/lib/knockout-3.2.0.js"></script>
