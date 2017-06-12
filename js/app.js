@@ -73,6 +73,10 @@ var ViewModel = function() {
             return spot.type == desiredType;
         });
     }, this);
+    
+    this.itemClick = function(){
+        console.log("this clickitem func");
+    };
 
     // Animation callbacks for the  list
     this.showlistElement = function(elem) {
