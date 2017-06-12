@@ -39,7 +39,7 @@
 <div data-bind='template: { foreach: listToShow,
                             beforeRemove: hidelistElement,
                             afterAdd: showlistElement }'>
-    <div> <a data-bind="text: title, attr: {'data-markerid': numid}" href="#" class="marker-link"> </a></div>
+    <div> <a data-bind="click: $parent.itemClick, text: title, attr: {'data-markerid': numid}" href="#" class="marker-link"> </a></div>
 </div>
  
     </div>
