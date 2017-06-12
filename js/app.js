@@ -76,6 +76,10 @@ var ViewModel = function() {
     
     this.itemClick = function(){
         console.log("this clickitem func");
+            $('.marker-link').on('click', function() {
+        google.maps.event.trigger(markers[$(this).data('markerid')], 'click');
+
+    });
     };
 
     // Animation callbacks for the  list
@@ -152,10 +156,10 @@ function initMap() {
         bounds.extend(markers[i].position);
     };
     // Creates click event that opens the info window from the link on the left panel
-    $('.marker-link').on('click', function() {
-        google.maps.event.trigger(markers[$(this).data('markerid')], 'click');
-
-    });
+//    $('.marker-link').on('click', function() {
+//        google.maps.event.trigger(markers[$(this).data('markerid')], 'click');
+//
+//    });
 
     // fits the marker area into the browser window
     map.fitBounds(bounds);
