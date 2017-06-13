@@ -170,7 +170,7 @@ function initMap() {
             // Make sure the marker property is cleared if the infowindow is closed.
             var infoWindowClosed = false;
 
-            console.log(infoWindowClosed);
+           
             // infowindow listens for a closed click
             infowindow.addListener('closeclick', function() {
 
@@ -211,7 +211,7 @@ function initMap() {
             // Use streetview service to get the closest streetview image within
             // 50 meters of the markers position
             streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-            console.log(marker.position + "dis");
+            
             // Open the infowindow on the correct marker.
             infowindow.open(map, marker);
         }
