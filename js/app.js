@@ -1,3 +1,4 @@
+
 var spots = ko.observableArray([{
         title: 'Wallenberg 4 Step',
         name: 'bbbbbb',
@@ -73,13 +74,9 @@ var ViewModel = function() {
             return spot.type == desiredType;
         });
     }, this);
-    
-    this.itemClick = function(){
-        console.log("this clickitem func");
-            $('.marker-link').on('click', function() {
-        google.maps.event.trigger(markers[$(this).data('markerid')], 'click');
-
-    });
+        
+    this.itemClick = function(location){
+        google.maps.event.trigger(markers[this.numid], 'click');
     };
 
     // Animation callbacks for the  list
@@ -128,6 +125,7 @@ function initMap() {
         var title = spots()[i].title;
         var numid = spots()[i].numid;
         var icon = spots()[i].icon;
+        var id = spots()[i].id
         var that = this;
         // Create a marker per location, and put into markers array.
         var marker = new google.maps.Marker({
@@ -137,7 +135,7 @@ function initMap() {
             icon: icon,
             numid: numid,
             animation: google.maps.Animation.DROP,
-            id: i
+            id: id
         });
         // Push the marker to our array of markers.
         markers.push(marker);
