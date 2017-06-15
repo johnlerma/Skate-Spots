@@ -9,25 +9,27 @@
 
 <body>
     <div id="list">
-<!--
-        <div id="filter">
-1: <input type="checkbox" value="1" data-bind="checked: filters" /><br/>
-2: <input type="checkbox" value="2" data-bind="checked: filters" /><br/>
-            <hr/>
-<ul data-bind="foreach: filteredPeople">
-    <li data-bind="text: name"></li>
-</ul>
-    </div><br><br>
--->
-        
+  
 <h2>Skate Spots</h2>
-<p> 
-    <label>
-        <input type='checkbox' data-bind='checked: displayAdvancedOptions' />
-        Display advanced options
-    </label>
-</p>
- 
+        
+<p>Type of Spot:<br><br>
+      <select data-bind="
+      options: spotType,
+      value: selectedType,
+      optionsCaption: 'Choose...',
+      "></select></p>
+<!--   <p>You have selected <b><span data-bind="text:selectedType"></b></span>-->
+<div data-bind='template: { foreach: listToShow,
+                            beforeRemove: hidelistElement,
+                            afterAdd: showlistElement }'>
+    <div> <a data-bind="click: $parent.itemClick, text: title, attr: {'data-markerid': numid}" href="#" class="marker-link"> </a></div>
+</div><br><br>
+        
+        
+        
+        
+<!--
+        
 <p data-bind='fadeVisible: displayAdvancedOptions'>
     Show:
     <label><input type='radio'  value='all' data-bind='checked: typeToShow' />All</label><br><br>
@@ -41,6 +43,7 @@
                             afterAdd: showlistElement }'>
     <div> <a data-bind="click: $parent.itemClick, text: title, attr: {'data-markerid': numid}" href="#" class="marker-link"> </a></div>
 </div>
+-->
  
     </div>
     <div id="maincontainer">
