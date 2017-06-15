@@ -58,31 +58,55 @@ var spots = ko.observableArray([{
     }
 ]);
 
+
+var Country = function(name, population) {
+        this.countryName = name;
+        this.countryPopulation = population;
+    };
+
 var ViewModel = function() {
     var self = this;
+    var selectedCountry = ko.observable();
     this.displayMessage = ko.observable(true);
-    this.spotList = ko.observableArray([]);
-    this.typeToShow = ko.observable("all");
+    //this.spotList = ko.observableArray([]);
+    //this was first filter
+    //this.typeToShow = ko.observable("all");
+    this.selectedType = ko.observable("all");
     this.displayAdvancedOptions = ko.observable(false);
 
     this.listToShow = ko.pureComputed(function() {
+
         // Represents a filtered list of skatespots
         // i.e., only those matching the "typeToShow" condition
-        var desiredType = this.typeToShow();
-        if (desiredType == "all") return spots();
-        return ko.utils.arrayFilter(spots(), function(spot) {
-            return spot.type == desiredType;
-        });
-    }, this);
+        var desiredType = this.selectedType();
+
+        if (desiredType == "all") {
+            //markers.setVisible(false);    
+            return spots();
+        }
         
+        else {
+          
+        return ko.utils.arrayFilter(spots(), function(spot) {
+
+        return spot.type == desiredType;
+        
+        });
+        };
+    }, this);
+   
+   
+    this.spotType = ko.observableArray(['all', 'stairs', 'ledges', 'bank']);
+    // knockout controls the click function of the list
     this.itemClick = function(location){
         google.maps.event.trigger(markers[this.numid], 'click');
     };
 
     // Animation callbacks for the  list
     this.showlistElement = function(elem) {
-        if (elem.nodeType === 1) $(elem).hide().slideDown()
+        if (elem.nodeType === 1) $(elem).hide().slideDown();
     };
+    
     this.hidelistElement = function(elem) {
         if (elem.nodeType === 1) $(elem).slideUp(function() {
             $(elem).remove();
@@ -96,6 +120,7 @@ ko.bindingHandlers.fadeVisible = {
         // Initially set the element to be instantly visible/hidden depending on the value
         var value = valueAccessor();
         $(element).toggle(ko.unwrap(value)); // Use "unwrapObservable" so we can handle values that may or may not be observable
+        
     },
     update: function(element, valueAccessor) {
         // Whenever the value subsequently changes, slowly fade the element in or out
@@ -138,6 +163,7 @@ function initMap() {
             id: id
         });
         // Push the marker to our array of markers.
+        
         markers.push(marker);
 
 
@@ -161,7 +187,6 @@ function initMap() {
 
     // fits the marker area into the browser window
     map.fitBounds(bounds);
-
     function populateInfoWindow(marker, infowindow) {
         // Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker != marker) {
