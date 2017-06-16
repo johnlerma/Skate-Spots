@@ -1,4 +1,4 @@
-
+var marker;
 var spots = ko.observableArray([{
         title: 'Wallenberg 4 Step',
         name: 'bbbbbb',
@@ -73,7 +73,7 @@ var ViewModel = function() {
     //this.typeToShow = ko.observable("all");
     this.selectedType = ko.observable("all");
     this.displayAdvancedOptions = ko.observable(false);
-
+    
     this.listToShow = ko.pureComputed(function() {
 
         // Represents a filtered list of skatespots
@@ -81,14 +81,27 @@ var ViewModel = function() {
         var desiredType = this.selectedType();
 
         if (desiredType == "all") {
-            //markers.setVisible(false);    
+             //console.log(markers);
             return spots();
         }
         
         else {
-          
+          if (desiredType == "ledges"){
+            console.log("yes");
+              //console.log(listToShow);
+              for (var i = 0; i < spots().length; i++) {
+             if (spots()[i].type !== "ledges"){
+                // var match = spots()[i];
+                 console.log(markers);
+                // spots()[0].setVisible(false);
+                 
+             }
+            }
+            }
         return ko.utils.arrayFilter(spots(), function(spot) {
-
+            //for (var i = 0; i < spots().length; i++) {
+            
+           // }
         return spot.type == desiredType;
         
         });
@@ -151,6 +164,7 @@ function initMap() {
         var numid = spots()[i].numid;
         var icon = spots()[i].icon;
         var id = spots()[i].id
+        var type = spots()[i].type;
         var that = this;
         // Create a marker per location, and put into markers array.
         var marker = new google.maps.Marker({
@@ -159,14 +173,15 @@ function initMap() {
             title: title,
             icon: icon,
             numid: numid,
+            type: type,
             animation: google.maps.Animation.DROP,
             id: id
         });
         // Push the marker to our array of markers.
         
         markers.push(marker);
-
-
+        
+        
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function() {
             var inthisfunc = this;
