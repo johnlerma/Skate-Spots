@@ -1,4 +1,7 @@
 var marker;
+var markers = [];
+var infowindow;
+var infowindowOpen = false;
 var spots = ko.observableArray([{
         title: 'Wallenberg 4 Step',
         name: 'bbbbbb',
@@ -65,6 +68,7 @@ var Country = function(name, population) {
     };
 
 var ViewModel = function() {
+    
     var self = this;
     var selectedCountry = ko.observable();
     this.displayMessage = ko.observable(true);
@@ -73,46 +77,51 @@ var ViewModel = function() {
     //this.typeToShow = ko.observable("all");
     this.selectedType = ko.observable("all");
     this.displayAdvancedOptions = ko.observable(false);
-    
-    this.listToShow = ko.pureComputed(function() {
 
+    this.listToShow = ko.pureComputed(function() {
+       console.log(infowindowOpen); 
+        console.log(this.selectedType());
+        if (infowindowOpen === true && this.selectedType() !== largeInfowindow.marker.type) {
+            largeInfowindow.close();
+        };
+        //infowindow.setMarker = null;
+        //turns on all the markers as default before filtering them
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setVisible(true);
+        }
         // Represents a filtered list of skatespots
         // i.e., only those matching the "typeToShow" condition
         var desiredType = this.selectedType();
 
         if (desiredType == "all") {
-             //console.log(markers);
             return spots();
-        }
-        
-        else {
-          if (desiredType == "ledges"){
-            console.log("yes");
-              //console.log(listToShow);
-              for (var i = 0; i < spots().length; i++) {
-             if (spots()[i].type !== "ledges"){
-                // var match = spots()[i];
-                 console.log(markers);
-                // spots()[0].setVisible(false);
-                 
-             }
-            }
-            }
-        return ko.utils.arrayFilter(spots(), function(spot) {
-            //for (var i = 0; i < spots().length; i++) {
-            
-           // }
-        return spot.type == desiredType;
-        
-        });
+        } else {
+            for (var i = 0; i < spots().length; i++) {
+                if (spots()[i].type !== desiredType) {};
+            };
+
+            return ko.utils.arrayFilter(spots(), function(spot) {
+                if (spot.type !== desiredType) {
+                    for (var i = 0; i < spots().length; i++) {
+                        if (markers[i].type !== desiredType) {
+                            markers[i].setVisible(false);
+                        }
+                    };
+
+                }
+
+                return spot.type == desiredType;
+
+            });
         };
     }, this);
-   
    
     this.spotType = ko.observableArray(['all', 'stairs', 'ledges', 'bank']);
     // knockout controls the click function of the list
     this.itemClick = function(location){
         google.maps.event.trigger(markers[this.numid], 'click');
+        //infowindowOpen = true;
+        //console.log("i clicked");
     };
 
     // Animation callbacks for the  list
@@ -155,7 +164,7 @@ function initMap() {
     });
     // Create a single latLng literal object.
     //var wallenberg = {lat: 37.7802, lng: -122.446864};
-    var largeInfowindow = new google.maps.InfoWindow();
+    largeInfowindow = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
 
     for (var i = 0; i < spots().length; i++) {
@@ -167,7 +176,7 @@ function initMap() {
         var type = spots()[i].type;
         var that = this;
         // Create a marker per location, and put into markers array.
-        var marker = new google.maps.Marker({
+         marker = new google.maps.Marker({
             map: map,
             position: position,
             title: title,
@@ -185,6 +194,8 @@ function initMap() {
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function() {
             var inthisfunc = this;
+            infowindowOpen = true;
+            console.log("i clicked2");
             populateInfoWindow(this, largeInfowindow);
             this.setAnimation(google.maps.Animation.BOUNCE);
             setTimeout(function() {
@@ -194,11 +205,7 @@ function initMap() {
         });
         bounds.extend(markers[i].position);
     };
-    // Creates click event that opens the info window from the link on the left panel
-//    $('.marker-link').on('click', function() {
-//        google.maps.event.trigger(markers[$(this).data('markerid')], 'click');
-//
-//    });
+
 
     // fits the marker area into the browser window
     map.fitBounds(bounds);
@@ -208,20 +215,24 @@ function initMap() {
             infowindow.setContent('');
             infowindow.marker = marker;
             // Make sure the marker property is cleared if the infowindow is closed.
-            var infoWindowClosed = false;
+            //var infoWindowClosed = false;
 
-           
+            //console.log(initMap.largeInfowindow);
             // infowindow listens for a closed click
             infowindow.addListener('closeclick', function() {
-
-                // infowindow.setMarker = null;
-                // infoWindowClosed = true;
-                // console.log(infoWindowClosed);
+                console.log("close infowindow");
+                 //infowindow.setMarker = null;
+                 infowindowOpen = false;
+                console.log("i closed");
             });
-            if (infoWindowClosed) {
-                infowindow.open(map, marker);
-                infoWindowClosed = false;
-            };
+            
+            
+            
+//            if (infoWindowClosed = true) {
+//                console.log("yeah i was closed");
+//                infowindow.open(map, marker);
+//                infoWindowClosed = false;
+//            };
             var streetViewService = new google.maps.StreetViewService();
             var radius = 50;
             // In case the status is OK, which means the pano was found, compute the
@@ -253,9 +264,17 @@ function initMap() {
             streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
             
             // Open the infowindow on the correct marker.
-            infowindow.open(map, marker);
+           
         }
+         infowindow.open(map, marker);
     }
 }
-
+           
 ko.applyBindings(new ViewModel());
+
+
+
+function googleError(e) {
+	alert("Google Maps cannot be loaded at this time");
+	console.log(e);
+}
