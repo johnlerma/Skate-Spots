@@ -174,6 +174,8 @@ function initMap() {
         var icon = spots()[i].icon;
         var id = spots()[i].id
         var type = spots()[i].type;
+        var lat = spots()[i].location.lat;
+        var lng = spots()[i].location.lng;
         var that = this;
         // Create a marker per location, and put into markers array.
          marker = new google.maps.Marker({
@@ -184,7 +186,9 @@ function initMap() {
             numid: numid,
             type: type,
             animation: google.maps.Animation.DROP,
-            id: id
+            id: id,
+            lat: lat,
+            lng: lng
         });
         // Push the marker to our array of markers.
         
@@ -210,6 +214,68 @@ function initMap() {
     // fits the marker area into the browser window
     map.fitBounds(bounds);
     function populateInfoWindow(marker, infowindow) {
+        
+        //FLickr API call
+        
+        function getFlickrImage() {
+                console.log("location: " + marker.lng);   
+            var flickrURL = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=a47f036c23ed9b5f526a4c21a14658f0';
+            flickrURL += $.param({
+            'method': 'flickr.photos.search',
+            'api_key': 'a47f036c23ed9b5f526a4c21a14658f0',
+            'tags': 'skateboarding, skateboard, skate, skateboards',
+            'per_page': 10,
+            'lat': marker.lat,
+            'lon': marker.lng,
+            'radius': .25,
+            'radius_units': 'mi',
+            'privacy_filter': 1,
+            'format': 'json',
+            'nojsoncallback': 1
+        });
+            console.log("getflickrimage: " + flickrURL);
+            //add the returned photos to the footer
+            $.getJSON(flickrURL, function(data) {
+                
+                
+                for (var j = 0; j < data.photos.photo.length; j++) {
+                    console.log("flick j: " + j);
+                    var photofeed = data.photos.photo[j];
+                     var $flickrfooter2 = $('#flickrfooter');
+                    $flickrfooter2.append('<img class="infowndwimg" src="https://farm' + photofeed.farm + '.staticflickr.com/' + photofeed.server + '/' + photofeed.id + '_' + photofeed.secret + '_n.jpg">');
+            }
+                var detail = data.photos.photo[0];
+                var $flickrfooter = $('#flickrfooter');
+                $flickrfooter.append('<img class="infowndwimg" src="https://farm' + detail.farm + '.staticflickr.com/' + detail.server + '/' + detail.id + '_' + detail.secret + '_n.jpg">');
+                }).fail(function(){
+        $flickrfooter.append('<p style="text-align: center;">Sorry! The photo</p><p style="text-align: center;">could not be loaded</p>');
+    });
+            
+            
+            
+            
+//            $.getJSON(flickrURL, function(data) {
+//            for (var i = 0; i < data.length; i++) {
+//            console.log("i: " + i);
+//            
+//            }
+//            });
+//            
+            
+            
+            
+            
+            
+            
+            
+            
+        //closes getFlickrImage()
+        }
+        
+        
+        getFlickrImage();
+        
+        
         // Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker != marker) {
             infowindow.setContent('');
@@ -221,9 +287,11 @@ function initMap() {
             // infowindow listens for a closed click
             infowindow.addListener('closeclick', function() {
                 console.log("close infowindow");
+                var $flickrfooter2 = $('.infowndwimg');
+                $flickrfooter2.remove();
                  //infowindow.setMarker = null;
                  infowindowOpen = false;
-                console.log("i closed");
+                console.log("i closeclicked");
             });
             
             
