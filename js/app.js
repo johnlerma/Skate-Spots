@@ -63,12 +63,12 @@ var spots = ko.observableArray([{
 
 
 var Country = function(name, population) {
-        this.countryName = name;
-        this.countryPopulation = population;
-    };
+    this.countryName = name;
+    this.countryPopulation = population;
+};
 
 var ViewModel = function() {
-    
+
     var self = this;
     var selectedCountry = ko.observable();
     this.displayMessage = ko.observable(true);
@@ -79,15 +79,15 @@ var ViewModel = function() {
     this.displayAdvancedOptions = ko.observable(false);
 
     this.listToShow = ko.pureComputed(function() {
-       console.log(infowindowOpen); 
+        console.log(infowindowOpen);
         console.log(this.selectedType());
         if (infowindowOpen === true && this.selectedType() !== largeInfowindow.marker.type) {
             largeInfowindow.close();
-        };
+        }
         //infowindow.setMarker = null;
         //turns on all the markers as default before filtering them
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setVisible(true);
+        for (var k = 0; k < markers.length; k++) {
+            markers[k].setVisible(true);
         }
         // Represents a filtered list of skatespots
         // i.e., only those matching the "typeToShow" condition
@@ -97,8 +97,11 @@ var ViewModel = function() {
             return spots();
         } else {
             for (var i = 0; i < spots().length; i++) {
-                if (spots()[i].type !== desiredType) {};
-            };
+                if (spots()[i].type !== desiredType) {
+                    // what is this for?
+                    console.log("what is this for");
+                }
+            }
 
             return ko.utils.arrayFilter(spots(), function(spot) {
                 if (spot.type !== desiredType) {
@@ -106,29 +109,30 @@ var ViewModel = function() {
                         if (markers[i].type !== desiredType) {
                             markers[i].setVisible(false);
                         }
-                    };
+                    }
 
                 }
 
                 return spot.type == desiredType;
 
             });
-        };
+        }
     }, this);
-   
+
     this.spotType = ko.observableArray(['all', 'stairs', 'ledges', 'bank']);
     // knockout controls the click function of the list
-    this.itemClick = function(location){
+    this.itemClick = function(location) {
+        //  var $flickrfooter2 = $('.infowndwimg');
+        $('.infowndwimg').remove();
         google.maps.event.trigger(markers[this.numid], 'click');
-        //infowindowOpen = true;
-        //console.log("i clicked");
+
     };
 
     // Animation callbacks for the  list
     this.showlistElement = function(elem) {
         if (elem.nodeType === 1) $(elem).hide().slideDown();
     };
-    
+
     this.hidelistElement = function(elem) {
         if (elem.nodeType === 1) $(elem).slideUp(function() {
             $(elem).remove();
@@ -142,7 +146,7 @@ ko.bindingHandlers.fadeVisible = {
         // Initially set the element to be instantly visible/hidden depending on the value
         var value = valueAccessor();
         $(element).toggle(ko.unwrap(value)); // Use "unwrapObservable" so we can handle values that may or may not be observable
-        
+
     },
     update: function(element, valueAccessor) {
         // Whenever the value subsequently changes, slowly fade the element in or out
@@ -172,13 +176,12 @@ function initMap() {
         var title = spots()[i].title;
         var numid = spots()[i].numid;
         var icon = spots()[i].icon;
-        var id = spots()[i].id
         var type = spots()[i].type;
         var lat = spots()[i].location.lat;
         var lng = spots()[i].location.lng;
         var that = this;
         // Create a marker per location, and put into markers array.
-         marker = new google.maps.Marker({
+        marker = new google.maps.Marker({
             map: map,
             position: position,
             title: title,
@@ -186,20 +189,19 @@ function initMap() {
             numid: numid,
             type: type,
             animation: google.maps.Animation.DROP,
-            id: id,
             lat: lat,
             lng: lng
         });
+
         // Push the marker to our array of markers.
-        
         markers.push(marker);
-        
-        
+
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function() {
             var inthisfunc = this;
             infowindowOpen = true;
-            console.log("i clicked2");
+
+            //populate the info with and make the marker bounce
             populateInfoWindow(this, largeInfowindow);
             this.setAnimation(google.maps.Animation.BOUNCE);
             setTimeout(function() {
@@ -210,72 +212,52 @@ function initMap() {
         bounds.extend(markers[i].position);
     };
 
-
     // fits the marker area into the browser window
     map.fitBounds(bounds);
+
+    //populate info window with 
     function populateInfoWindow(marker, infowindow) {
-        
+
         //FLickr API call
-        
         function getFlickrImage() {
-                console.log("location: " + marker.lng);   
+            console.log("location: " + marker.lng);
             var flickrURL = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=a47f036c23ed9b5f526a4c21a14658f0';
             flickrURL += $.param({
-            'method': 'flickr.photos.search',
-            'api_key': 'a47f036c23ed9b5f526a4c21a14658f0',
-            'tags': 'skateboarding, skateboard, skate, skateboards',
-            'per_page': 10,
-            'lat': marker.lat,
-            'lon': marker.lng,
-            'radius': .25,
-            'radius_units': 'mi',
-            'privacy_filter': 1,
-            'format': 'json',
-            'nojsoncallback': 1
-        });
+                'method': 'flickr.photos.search',
+                'api_key': 'a47f036c23ed9b5f526a4c21a14658f0',
+                'tags': 'skateboarding, skateboard, skate, skateboards',
+                'per_page': 10,
+                'lat': marker.lat,
+                'lon': marker.lng,
+                'radius': .25,
+                'radius_units': 'mi',
+                'privacy_filter': 1,
+                'format': 'json',
+                'nojsoncallback': 1
+            });
             console.log("getflickrimage: " + flickrURL);
             //add the returned photos to the footer
             $.getJSON(flickrURL, function(data) {
-                
-                
+
+
                 for (var j = 0; j < data.photos.photo.length; j++) {
                     console.log("flick j: " + j);
                     var photofeed = data.photos.photo[j];
-                     var $flickrfooter2 = $('#flickrfooter');
+                    var $flickrfooter2 = $('#flickrfooter');
                     $flickrfooter2.append('<img class="infowndwimg" src="https://farm' + photofeed.farm + '.staticflickr.com/' + photofeed.server + '/' + photofeed.id + '_' + photofeed.secret + '_n.jpg">');
-            }
+                }
                 var detail = data.photos.photo[0];
                 var $flickrfooter = $('#flickrfooter');
                 $flickrfooter.append('<img class="infowndwimg" src="https://farm' + detail.farm + '.staticflickr.com/' + detail.server + '/' + detail.id + '_' + detail.secret + '_n.jpg">');
-                }).fail(function(){
-        $flickrfooter.append('<p style="text-align: center;">Sorry! The photo</p><p style="text-align: center;">could not be loaded</p>');
-    });
-            
-            
-            
-            
-//            $.getJSON(flickrURL, function(data) {
-//            for (var i = 0; i < data.length; i++) {
-//            console.log("i: " + i);
-//            
-//            }
-//            });
-//            
-            
-            
-            
-            
-            
-            
-            
-            
-        //closes getFlickrImage()
+            }).fail(function() {
+                $flickrfooter.append('<p style="text-align: center;">Sorry! The photo</p><p style="text-align: center;">could not be loaded</p>');
+            });
         }
-        
-        
+
+
         getFlickrImage();
-        
-        
+
+
         // Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker != marker) {
             infowindow.setContent('');
@@ -289,18 +271,10 @@ function initMap() {
                 console.log("close infowindow");
                 var $flickrfooter2 = $('.infowndwimg');
                 $flickrfooter2.remove();
-                 //infowindow.setMarker = null;
-                 infowindowOpen = false;
+                infowindowOpen = false;
                 console.log("i closeclicked");
             });
-            
-            
-            
-//            if (infoWindowClosed = true) {
-//                console.log("yeah i was closed");
-//                infowindow.open(map, marker);
-//                infoWindowClosed = false;
-//            };
+
             var streetViewService = new google.maps.StreetViewService();
             var radius = 50;
             // In case the status is OK, which means the pano was found, compute the
@@ -330,19 +304,19 @@ function initMap() {
             // Use streetview service to get the closest streetview image within
             // 50 meters of the markers position
             streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-            
+
             // Open the infowindow on the correct marker.
-           
+
         }
-         infowindow.open(map, marker);
+        infowindow.open(map, marker);
     }
 }
-           
+
 ko.applyBindings(new ViewModel());
 
 
 
 function googleError(e) {
-	alert("Google Maps cannot be loaded at this time");
-	console.log(e);
+    alert("Google Maps cannot be loaded at this time");
+    console.log(e);
 }
