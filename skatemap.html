@@ -4,41 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="css/hamburgers.css" rel="stylesheet">
 </head>
 
-<body>
-    <div id="list">
-  
-<h2>Skate Spots</h2>
-        
-<p>Type of Spot:<br><br>
-      <select data-bind="
+<body><div id="container">
+    <nav><h1>SKATE SPOTS</h1>
+     <div class="nav-right hidden-xs">
+      <div class="button" id="btn">
+        <div class="bar top"></div>
+        <div class="bar middle"></div>
+        <div class="bar bottom"></div>
+      </div>
+    </div>
+    </nav>
+        <div class="footerwrap">
+     <div class="flickrfooter"></div>
+    </div>
+    <div class="list">
+        <p>Type of Spot:<br><br>
+        <select class="dropdownmenu" data-bind="
       options: spotType,
       value: selectedType,
       optionsCaption: 'Choose...',
       "></select></p>
 <!--   <p>You have selected <b><span data-bind="text:selectedType"></b></span>-->
-<div data-bind='template: { foreach: listToShow,
+        <div data-bind='template: { foreach: listToShow,
                             beforeRemove: hidelistElement,
                             afterAdd: showlistElement }'>
-    <div> <a data-bind="click: $parent.itemClick, text: title, attr: {'data-markerid': numid}" href="#" class="marker-link"> </a></div>
-</div><br><br>
+            <div class="listitem"><a data-bind="click: $parent.itemClick, text: title, attr: {'data-markerid': numid}" href="#" class="marker-link"></a>
+            </div>
+        </div>
         
         
     </div>
     <div id="maincontainer">
-        <div id="nav"><h1>Skate Map</h1></div>
         <div id="map"></div>
-        
     </div>
+    </div>
+<!--
     <div id="flickrfooter"></div>
-     <script src="js/lib/knockout-3.2.0.js"></script>
-     <script src="js/lib/jquery.min.js"></script>
+    
+-->
+    <script src="js/lib/knockout-3.2.0.js"></script>
+    <script src="js/lib/jquery.min.js"></script>
     <script type="text/javascript" src="js/mapstyle.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
 <!--    <script type="text/javascript" src="js/googlemap.js"></script>-->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXe2w6EI7WdulMjGkU5eCJu147CH7k19U&libraries=geometry&v=3&callback=initMap">
+    </script>
+    <script>
+    $(document).ready(function() {
+
+  function toggleSidebar() {
+    $(".button").toggleClass("active");
+    $(".list").toggleClass("move-to-left");
+    $(".sidebar-item").toggleClass("active");
+  }
+
+  $(".button").on("click tap", function() {
+    toggleSidebar();
+  });
+
+  $(document).keyup(function(e) {
+    if (e.keyCode === 27) {
+      toggleSidebar();
+    }
+  });
+
+});
     </script>
 </body>
 
