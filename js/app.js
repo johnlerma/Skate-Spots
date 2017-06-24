@@ -7,7 +7,7 @@ var spots = ko.observableArray([{
         name: 'bbbbbb',
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-        type: 'stairs',
+        type: 'STAIRS',
         numid: '0',
         location: {
             lat: 37.7802,
@@ -19,7 +19,7 @@ var spots = ko.observableArray([{
         name: 'ccccc',
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-        type: 'ledges',
+        type: 'LEDGES',
         numid: '1',
         location: {
             lat: 37.749408,
@@ -30,7 +30,7 @@ var spots = ko.observableArray([{
         title: 'Sega Circle Ledges',
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-        type: 'skatepark',
+        type: 'LEDGES',
         numid: '2',
         location: {
             lat: 37.769155,
@@ -41,7 +41,7 @@ var spots = ko.observableArray([{
         title: 'Pier 7 Stair Set',
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-        type: 'ledges',
+        type: 'STAIRS',
         numid: '3',
         location: {
             lat: 37.798694,
@@ -52,7 +52,7 @@ var spots = ko.observableArray([{
         title: 'Fort Miley Pyramids',
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-        type: 'bank',
+        type: 'BANK',
         numid: '4',
         location: {
             lat: 37.783255,
@@ -62,46 +62,34 @@ var spots = ko.observableArray([{
 ]);
 
 
-var Country = function(name, population) {
-    this.countryName = name;
-    this.countryPopulation = population;
-};
 
 var ViewModel = function() {
 
     var self = this;
-    var selectedCountry = ko.observable();
+    //var selectedCountry = ko.observable();
     this.displayMessage = ko.observable(true);
-    //this.spotList = ko.observableArray([]);
-    //this was first filter
-    //this.typeToShow = ko.observable("all");
-    this.selectedType = ko.observable("all");
+    this.selectedType = ko.observable("ALL");
     this.displayAdvancedOptions = ko.observable(false);
-
+    
     this.listToShow = ko.pureComputed(function() {
-        console.log(infowindowOpen);
-        console.log(this.selectedType());
         if (infowindowOpen === true && this.selectedType() !== largeInfowindow.marker.type) {
             largeInfowindow.close();
         }
-        //infowindow.setMarker = null;
         //turns on all the markers as default before filtering them
         for (var k = 0; k < markers.length; k++) {
             markers[k].setVisible(true);
         }
-        // Represents a filtered list of skatespots
-        // i.e., only those matching the "typeToShow" condition
+        
         var desiredType = this.selectedType();
-
-        if (desiredType == "all") {
+        if (desiredType == "ALL") {
             return spots();
         } else {
-            for (var i = 0; i < spots().length; i++) {
-                if (spots()[i].type !== desiredType) {
-                    // what is this for?
-                    console.log("what is this for");
-                }
-            }
+//            for (var i = 0; i < spots().length; i++) {
+//                if (spots()[i].type !== desiredType) {
+//                    // what is this for?
+//                    console.log("what is this for");
+//                }
+//            }
 
             return ko.utils.arrayFilter(spots(), function(spot) {
                 if (spot.type !== desiredType) {
@@ -119,10 +107,9 @@ var ViewModel = function() {
         }
     }, this);
 
-    this.spotType = ko.observableArray(['all', 'stairs', 'ledges', 'bank']);
+    this.spotType = ko.observableArray(['ALL', 'STAIRS', 'LEDGES', 'BANK']);
     // knockout controls the click function of the list
     this.itemClick = function(location) {
-        //  var $flickrfooter2 = $('.infowndwimg');
         $('.infowndwimg').remove();
         google.maps.event.trigger(markers[this.numid], 'click');
 
@@ -164,10 +151,16 @@ function initMap() {
             lng: -122.4194
         },
         zoom: 14,
-        styles: styles
+        styles: styles,
+        mapTypeControlOptions: {
+                  style: google.maps.MapTypeControlStyle.DEFAULT,
+                  position:google.maps.ControlPosition.TOP_RIGHT,
+                  
+               }
+        
     });
+    
     // Create a single latLng literal object.
-    //var wallenberg = {lat: 37.7802, lng: -122.446864};
     largeInfowindow = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
 
@@ -179,7 +172,7 @@ function initMap() {
         var type = spots()[i].type;
         var lat = spots()[i].location.lat;
         var lng = spots()[i].location.lng;
-        var that = this;
+        //var that = this;
         // Create a marker per location, and put into markers array.
         marker = new google.maps.Marker({
             map: map,
@@ -210,7 +203,7 @@ function initMap() {
 
         });
         bounds.extend(markers[i].position);
-    };
+    }
 
     // fits the marker area into the browser window
     map.fitBounds(bounds);
@@ -220,7 +213,6 @@ function initMap() {
 
         //FLickr API call
         function getFlickrImage() {
-            console.log("location: " + marker.lng);
             var flickrURL = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=a47f036c23ed9b5f526a4c21a14658f0';
             flickrURL += $.param({
                 'method': 'flickr.photos.search',
@@ -229,7 +221,7 @@ function initMap() {
                 'per_page': 10,
                 'lat': marker.lat,
                 'lon': marker.lng,
-                'radius': .25,
+                'radius': 0.25,
                 'radius_units': 'mi',
                 'privacy_filter': 1,
                 'format': 'json',
@@ -241,17 +233,18 @@ function initMap() {
 
 
                 for (var j = 0; j < data.photos.photo.length; j++) {
-                    console.log("flick j: " + j);
                     var photofeed = data.photos.photo[j];
-                    var $flickrfooter2 = $('#flickrfooter');
-                    $flickrfooter2.append('<img class="infowndwimg" src="https://farm' + photofeed.farm + '.staticflickr.com/' + photofeed.server + '/' + photofeed.id + '_' + photofeed.secret + '_n.jpg">');
+                    //var $flickrfooter2 = $('#flickrfooter');
+                    $('.flickrfooter').append('<img class="infowndwimg" src="https://farm' + photofeed.farm + '.staticflickr.com/' + photofeed.server + '/' + photofeed.id + '_' + photofeed.secret + '_n.jpg">');
                 }
                 var detail = data.photos.photo[0];
-                var $flickrfooter = $('#flickrfooter');
-                $flickrfooter.append('<img class="infowndwimg" src="https://farm' + detail.farm + '.staticflickr.com/' + detail.server + '/' + detail.id + '_' + detail.secret + '_n.jpg">');
+                //var $flickrfooter = $('#flickrfooter');
+                $('.flickrfooter').append('<img class="infowndwimg" src="https://farm' + detail.farm + '.staticflickr.com/' + detail.server + '/' + detail.id + '_' + detail.secret + '_n.jpg">');
             }).fail(function() {
                 $flickrfooter.append('<p style="text-align: center;">Sorry! The photo</p><p style="text-align: center;">could not be loaded</p>');
             });
+            
+              $(".flickrfooter").toggleClass("flickr-move-up ");
         }
 
 
@@ -262,17 +255,12 @@ function initMap() {
         if (infowindow.marker != marker) {
             infowindow.setContent('');
             infowindow.marker = marker;
-            // Make sure the marker property is cleared if the infowindow is closed.
-            //var infoWindowClosed = false;
 
-            //console.log(initMap.largeInfowindow);
             // infowindow listens for a closed click
             infowindow.addListener('closeclick', function() {
-                console.log("close infowindow");
-                var $flickrfooter2 = $('.infowndwimg');
-                $flickrfooter2.remove();
+                //var $flickrfooter2 = $('.infowndwimg');
+                $('.infowndwimg').remove();
                 infowindowOpen = false;
-                console.log("i closeclicked");
             });
 
             var streetViewService = new google.maps.StreetViewService();
@@ -283,8 +271,7 @@ function initMap() {
             function getStreetView(data, status) {
                 if (status == google.maps.StreetViewStatus.OK) {
                     var nearStreetViewLocation = data.location.latLng;
-                    var heading = google.maps.geometry.spherical.computeHeading(
-                        nearStreetViewLocation, marker.position);
+                    var heading = google.maps.geometry.spherical.computeHeading(nearStreetViewLocation, marker.position);
                     var infoContent = '<div>' + marker.title + '</div><div id="pano"></div>';
                     infowindow.setContent(infoContent);
                     var panoramaOptions = {
