@@ -18,9 +18,20 @@
       </div>
     </div>
     </nav>
-        <div class="footerwrap">
-     <div class="flickrfooter"></div>
-    </div>
+        <div class="footerwrap" data-bind="css: moveUp">
+            <div class="footercontrols">
+                <div class="nearby">Photos near this location:
+                    <span data-bind="text: nearbyTitle"></span>
+                </div>
+                <div class="controlcontainer">
+                    <div class="caret" data-bind="visible: shouldShowCaretBtn"></div>
+                    <div class="close" data-bind="visible: shouldShowCloseBtn"></div>
+<!--                    <div class="closebutton"><img src="img/close.png" class="open-close"></div>-->
+                    </div>
+            </div>
+            <div class="flickrfooter"></div>
+            
+        </div>
     <div class="list">
         <p>Type of Spot:<br><br>
         <select class="dropdownmenu" data-bind="
@@ -54,25 +65,7 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXe2w6EI7WdulMjGkU5eCJu147CH7k19U&libraries=geometry&v=3&callback=initMap">
     </script>
     <script>
-    $(document).ready(function() {
-
-  function toggleSidebar() {
-    $(".button").toggleClass("active");
-    $(".list").toggleClass("move-to-left");
-    $(".sidebar-item").toggleClass("active");
-  }
-
-  $(".button").on("click tap", function() {
-    toggleSidebar();
-  });
-
-  $(document).keyup(function(e) {
-    if (e.keyCode === 27) {
-      toggleSidebar();
-    }
-  });
-
-});
+//   
     </script>
 </body>
 
