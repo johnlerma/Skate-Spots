@@ -2,6 +2,8 @@ var marker;
 var markers = [];
 var infowindow;
 var infowindowOpen = false;
+var footerOpen = false
+var footerclosebtn = false;
 var spots = ko.observableArray([{
         title: 'Wallenberg 4 Step',
         name: 'bbbbbb',
@@ -27,14 +29,14 @@ var spots = ko.observableArray([{
         }
     },
     {
-        title: 'Sega Circle Ledges',
+        title: 'SOMA Skatepark',
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-        type: 'LEDGES',
+        type: 'SKATEPARK',
         numid: '2',
         location: {
-            lat: 37.769155,
-            lng: -122.405325
+            lat: 37.770092,
+            lng: -122.421468
         }
     },
     {
@@ -61,15 +63,87 @@ var spots = ko.observableArray([{
     }
 ]);
 
-
+//function hideCaretshowClose(){
+//            $(".caret").hide();
+//            $(".close").show();
+//            footerOpen = true;
+//    };
 
 var ViewModel = function() {
+////hamburger menu start////
 
+        function toggleSidebar() {
+            $(".button").toggleClass("active");
+            $(".list").toggleClass("move-to-left");
+            $(".sidebar-item").toggleClass("active");
+            console.log("togglesidebar")
+            $(".footerwrap").toggleClass("footerwrapbig");
+            
+        }
+
+        $(".button").on("click tap", function() {
+            toggleSidebar();
+            console.log("toggle");
+        });
+
+        $(document).keyup(function(e) {
+            if (e.keyCode === 27) {
+                toggleSidebar();
+            }
+        });
+    
+    /////// hamburger end////
+    
     var self = this;
     //var selectedCountry = ko.observable();
+    this.footerOpen = ko.observable(false);
     this.displayMessage = ko.observable(true);
     this.selectedType = ko.observable("ALL");
     this.displayAdvancedOptions = ko.observable(false);
+    this.shouldShowCloseBtn = ko.observable(false);
+    this.shouldShowCaretBtn = ko.observable(true);
+    this.footerimages = ko.observable(false);
+    this.moveUp = ko.observable();
+    this.nearbyTitle = ko.observable("San Francisco");
+    
+    
+    
+     //// footer close button
+
+    $(".close").on("click tap", function() {
+            //$(".footerwrap").removeClass("flickr-move-up ");
+            self.moveUp('');
+            self.shouldShowCloseBtn(false);
+            self.shouldShowCaretBtn(true);
+            
+           // $(this).hide();
+            //$(".caret").show();
+            footerOpen = false;
+            footerclosebtn = true;
+        });
+    
+    //// footer close button
+    
+    $(".caret").on("click tap", function() {
+            //$(".footerwrap").addClass("flickr-move-up ");
+//            $(this).hide();
+//            $(".close").show();
+            self.moveUp('flickr-move-up');
+            self.shouldShowCloseBtn(true);
+            self.shouldShowCaretBtn(false);
+            footerOpen = true;
+        });
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     this.listToShow = ko.pureComputed(function() {
         if (infowindowOpen === true && this.selectedType() !== largeInfowindow.marker.type) {
@@ -107,11 +181,24 @@ var ViewModel = function() {
         }
     }, this);
 
-    this.spotType = ko.observableArray(['ALL', 'STAIRS', 'LEDGES', 'BANK']);
+    this.spotType = ko.observableArray(['ALL', 'STAIRS', 'LEDGES', 'BANK', 'SKATEPARK']);
     // knockout controls the click function of the list
     this.itemClick = function(location) {
+        console.log("2222222");
+        if (footerclosebtn == true){
+            console.log("asdfasdfasd");
+        }
+        else {
+            self.moveUp('flickr-move-up');
+            console.log("else")
+            self.shouldShowCloseBtn(true);
+            self.shouldShowCaretBtn(false);       
+        }
+        self.footerimages(false);
         $('.infowndwimg').remove();
         google.maps.event.trigger(markers[this.numid], 'click');
+        self.nearbyTitle(this.title);
+        
 
     };
 
@@ -145,6 +232,7 @@ ko.bindingHandlers.fadeVisible = {
 
 // Function to initialize the map within the map div
 function initMap() {
+    console.log("initMap start: footerOpen window open?" + footerOpen)
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
             lat: 37.7749,
@@ -156,7 +244,14 @@ function initMap() {
                   style: google.maps.MapTypeControlStyle.DEFAULT,
                   position:google.maps.ControlPosition.TOP_RIGHT,
                   
-               }
+               },
+        zoomControl: true,
+          zoomControlOptions: {
+              position: google.maps.ControlPosition.RIGHT_TOP
+          },
+        streetViewControlOptions: {
+              position: google.maps.ControlPosition.RIGHT_TOP
+          }
         
     });
     
@@ -194,9 +289,12 @@ function initMap() {
             var inthisfunc = this;
             infowindowOpen = true;
 
-            //populate the info with and make the marker bounce
+            //populate the info window,make the marker bounce, reset flickr footer
             populateInfoWindow(this, largeInfowindow);
+            
+             $('.infowndwimg').remove();
             this.setAnimation(google.maps.Animation.BOUNCE);
+            vm.nearbyTitle(this.title);
             setTimeout(function() {
                 inthisfunc.setAnimation(null);
             }, 750);
@@ -243,8 +341,16 @@ function initMap() {
             }).fail(function() {
                 $flickrfooter.append('<p style="text-align: center;">Sorry! The photo</p><p style="text-align: center;">could not be loaded</p>');
             });
+            console.log("footerOpen: " + footerOpen);
             
-              $(".flickrfooter").toggleClass("flickr-move-up ");
+            //when marker clicked on, check to see if footer is open and do stuff
+           if (footerclosebtn == false){
+                console.log("333433");
+                vm.moveUp('flickr-move-up');
+                vm.shouldShowCloseBtn(true);
+                vm.shouldShowCaretBtn(false);
+        }
+              
         }
 
 
@@ -259,8 +365,9 @@ function initMap() {
             // infowindow listens for a closed click
             infowindow.addListener('closeclick', function() {
                 //var $flickrfooter2 = $('.infowndwimg');
-                $('.infowndwimg').remove();
+                //$('.infowndwimg').remove();
                 infowindowOpen = false;
+                footerOpen = false;
             });
 
             var streetViewService = new google.maps.StreetViewService();
@@ -299,7 +406,9 @@ function initMap() {
     }
 }
 
-ko.applyBindings(new ViewModel());
+//ko.applyBindings(new ViewModel());
+var vm = new ViewModel();
+ko.applyBindings(vm);
 
 
 
