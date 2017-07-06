@@ -77,7 +77,7 @@ var ViewModel = function() {
             $(".list").toggleClass("move-to-left");
             $(".sidebar-item").toggleClass("active");
             console.log("togglesidebar")
-            $(".footerwrap").toggleClass("footerwrapbig");
+            $(".footerwrapFix").toggleClass("footerwrapbig");
             
         }
 
@@ -102,17 +102,31 @@ var ViewModel = function() {
     this.displayAdvancedOptions = ko.observable(false);
     this.shouldShowCloseBtn = ko.observable(false);
     this.shouldShowCaretBtn = ko.observable(true);
+    this.footerVisible = ko.observable(false);
     this.footerimages = ko.observable(false);
     this.moveUp = ko.observable();
+    this.moveUpFix = ko.observable();
     this.nearbyTitle = ko.observable("San Francisco");
+    this.defaultHeight = ko.observable();
+    this.footerwrapFix = ko.observable();
+    this.footerwrap = ko.observable();
     
-    
+    //self.defaultHeight('footerwrap2');
+   // self.footerwrap2('footerwrap');
+    self.footerwrap(true);
+//    self.footerwrapFix('footerwrapFix');
     
      //// footer close button
 
     $(".close").on("click tap", function() {
             //$(".footerwrap").removeClass("flickr-move-up ");
-            self.moveUp('');
+            self.moveUp(false);
+            console.log("wtf")
+            self.moveUpFix(false);
+            self.footerwrap('');
+            self.footerwrapFix('footerwrapFix');
+            
+            //self.defaultHeight('footerheightdefault');
             self.shouldShowCloseBtn(false);
             self.shouldShowCaretBtn(true);
             
@@ -128,20 +142,13 @@ var ViewModel = function() {
             //$(".footerwrap").addClass("flickr-move-up ");
 //            $(this).hide();
 //            $(".close").show();
-            self.moveUp('flickr-move-up');
+            //self.defaultHeight('');
+            self.moveUp(false);
+            self.moveUpFix(true);
             self.shouldShowCloseBtn(true);
             self.shouldShowCaretBtn(false);
             footerOpen = true;
         });
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -184,13 +191,18 @@ var ViewModel = function() {
     this.spotType = ko.observableArray(['ALL', 'STAIRS', 'LEDGES', 'BANK', 'SKATEPARK']);
     // knockout controls the click function of the list
     this.itemClick = function(location) {
+//        if (self.footerVisible() == false){
+//            console.log(" footer visible herexxxxx");
+//            self.footerVisible(true);
+//        }
+        
         console.log("2222222");
         if (footerclosebtn == true){
             console.log("asdfasdfasd");
         }
         else {
-            self.moveUp('flickr-move-up');
-            console.log("else")
+            self.moveUp(true);
+            console.log("else bla bla")
             self.shouldShowCloseBtn(true);
             self.shouldShowCaretBtn(false);       
         }
@@ -214,6 +226,10 @@ var ViewModel = function() {
     };
 
 };
+/// fixes the problem with multiple css bindings
+ko.bindingHandlers['css2'] = ko.bindingHandlers.css;
+ko.bindingHandlers['css3'] = ko.bindingHandlers.css;
+ko.bindingHandlers['css4'] = ko.bindingHandlers.css;
 
 ko.bindingHandlers.fadeVisible = {
     init: function(element, valueAccessor) {
@@ -238,7 +254,7 @@ function initMap() {
             lat: 37.7749,
             lng: -122.4194
         },
-        zoom: 14,
+        zoom: 10,
         styles: styles,
         mapTypeControlOptions: {
                   style: google.maps.MapTypeControlStyle.DEFAULT,
@@ -304,6 +320,7 @@ function initMap() {
     }
 
     // fits the marker area into the browser window
+    
     map.fitBounds(bounds);
 
     //populate info window with 
@@ -346,7 +363,7 @@ function initMap() {
             //when marker clicked on, check to see if footer is open and do stuff
            if (footerclosebtn == false){
                 console.log("333433");
-                vm.moveUp('flickr-move-up');
+                vm.moveUpFix(true);
                 vm.shouldShowCloseBtn(true);
                 vm.shouldShowCaretBtn(false);
         }
@@ -379,7 +396,7 @@ function initMap() {
                 if (status == google.maps.StreetViewStatus.OK) {
                     var nearStreetViewLocation = data.location.latLng;
                     var heading = google.maps.geometry.spherical.computeHeading(nearStreetViewLocation, marker.position);
-                    var infoContent = '<div>' + marker.title + '</div><div id="pano"></div>';
+                    var infoContent = '<div class="panoTitle">' + marker.title + '</div><div id="pano"></div>';
                     infowindow.setContent(infoContent);
                     var panoramaOptions = {
                         position: nearStreetViewLocation,
@@ -391,7 +408,7 @@ function initMap() {
                     var panorama = new google.maps.StreetViewPanorama(
                         document.getElementById('pano'), panoramaOptions);
                 } else {
-                    infowindow.setContent('<div>' + marker.title + '</div>' +
+                    infowindow.setContent('<div class="panoTitle">' + marker.title + '</div>' +
                         '<div>No Street View Found</div>');
                 }
             }
