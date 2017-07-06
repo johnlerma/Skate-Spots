@@ -20,23 +20,54 @@ nav {
     vertical-align: middle;
     line-height: 60px;
 }
-
+.mainFooterContainer {
+/*    border: 3px solid pink;*/
+    height: 300px;
+    z-index: 3;
+    bottom: 0px;
+    position: absolute;
+    width: calc(100% - 220px);
+    left: 220px;
+    overflow: hidden;
+    pointer-events: none;
+    
+}
 .footerwrap {
     background-color: rgba(0, 0, 0, 0.4);
     cursor: grab;
     pointer-events: auto;
-    z-index: 2;
     height: 240px;
-    position: absolute;
-    bottom: -200px;
-    width: calc(100% - 220px);
-    left: 220px;
+    position: relative;
+    bottom: -262px;
+    -webkit-transition: transform .7s ease-in-out;
+    -moz-transition: transform .7s ease-in-out;
+    -ms-transition: transform .7s ease-in-out;
+    -o-transition: transform .7s ease-in-out;
+    transition: transform .7s ease-in-out;  
+}
+
+.footerwrapFix {
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: grab;
+    pointer-events: auto;
+    height: 240px;
+    position: relative;
+    bottom: -260px !important;
+/*    left: 220px;*/
     -webkit-transition: transform .7s ease-in-out;
     -moz-transition: transform .7s ease-in-out;
     -ms-transition: transform .7s ease-in-out;
     -o-transition: transform .7s ease-in-out;
     transition: transform .7s ease-in-out;
-    
+}
+.footerheightdefault{
+    bottom: -200px;
+    position: relative;
+     -webkit-transition: transform .7s ease-in-out;
+    -moz-transition: transform .7s ease-in-out;
+    -ms-transition: transform .7s ease-in-out;
+    -o-transition: transform .7s ease-in-out;
+    transition: transform .7s ease-in-out;
 }
 
 .footerwrapbig{
@@ -64,7 +95,7 @@ nav {
     padding-top: 10px;
     padding-left: 10px;
     border-top: 1px solid black;
-    border-left: 1px solid black;
+/*    border-left: 1px solid black;*/
 }
 
 .flickrfooter {
@@ -87,12 +118,30 @@ nav {
     transition: transform .3s ease-in-out;
 }
 
-.flickr-move-up {
+/*
+.moveUp {
     -webkit-transform: translateY(-180px);
     -moz-transform: translateY(-180px);
     -ms-transform: translateY(-180px);
     -o-transform: translateY(-180px);
     transform: translateY(-180px);
+}
+*/
+.moveUpFix {
+    -webkit-transform: translateY(-180px)!important;
+    -moz-transform: translateY(-180px) !important;
+    -ms-transform: translateY(-180px) !important;
+    -o-transform: translateY(-180px) !important;
+    transform: translateY(-180px) !important;
+}
+
+
+.flickr-move-down {
+    -webkit-transform: translateY(220px);
+    -moz-transform: translateY(220px);
+    -ms-transform: translateY(220px);
+    -o-transform: translateY(220px);
+    transform: translateY(220px);
 }
 
 .infowndwimg {
@@ -144,7 +193,7 @@ nav {
 
 #map {
     /*    was height 95%*/
-    height: 95%;
+    height: calc(100% - 60px);
 }
 
 #nav {
@@ -380,7 +429,11 @@ select {
   transform: rotate(-45deg);
 }
 
-
+.panoTitle {
+    color: #1c1b21;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
 
 
 @media (min-width: 768px) {
