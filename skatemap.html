@@ -11,34 +11,35 @@
 <body><div id="container">
     <nav><h1>SKATE SPOTS</h1>
      <div class="nav-right hidden-xs">
-      <div class="button" id="btn">
+      <div class="button active" id="btn">
         <div class="bar top"></div>
         <div class="bar middle"></div>
         <div class="bar bottom"></div>
       </div>
     </div>
     </nav>
-        <div class="footerwrap" data-bind="css: moveUp">
-            <div class="footercontrols">
-                <div class="nearby">Photos near this location:
+        <div  class="mainFooterContainer">
+            <div data-bind=" css3: footerwrapFix, css: {moveUp}, css4: {moveUpFix}, css2: {footerwrap}">
+                <div class="footercontrols">
+                    <div class="nearby">Photos near this location:
                     <span data-bind="text: nearbyTitle"></span>
-                </div>
-                <div class="controlcontainer">
+                    </div>
+                    <div class="controlcontainer">
                     <div class="caret" data-bind="visible: shouldShowCaretBtn"></div>
                     <div class="close" data-bind="visible: shouldShowCloseBtn"></div>
 <!--                    <div class="closebutton"><img src="img/close.png" class="open-close"></div>-->
                     </div>
-            </div>
-            <div class="flickrfooter"></div>
+                </div>
+                <div class="flickrfooter">
+                </div>
             
+            </div>
         </div>
     <div class="list">
         <p>Type of Spot:<br><br>
         <select class="dropdownmenu" data-bind="
       options: spotType,
-      value: selectedType,
-      optionsCaption: 'Choose...',
-      "></select></p>
+      value: selectedType"></select></p>
 <!--   <p>You have selected <b><span data-bind="text:selectedType"></b></span>-->
         <div data-bind='template: { foreach: listToShow,
                             beforeRemove: hidelistElement,
