@@ -77,7 +77,7 @@ var ViewModel = function() {
             $(".list").toggleClass("move-to-left");
             $(".sidebar-item").toggleClass("active");
             console.log("togglesidebar")
-            $(".footerwrapFix").toggleClass("footerwrapbig");
+            $(".mainFooterContainer").toggleClass("footerwrapbig");
             
         }
 
