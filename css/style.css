@@ -91,6 +91,10 @@ nav {
     -moz-box-shadow: 0px -1px 20px 0px rgba(0, 0, 0, 0.23);
     box-shadow: 0px -1px 20px 0px rgba(0, 0, 0, 0.23);
 }
+.unclickable {
+    pointer-events: auto;
+    cursor: default;
+}
 .flickrfooter {
     cursor: grab;
     pointer-events: auto;
