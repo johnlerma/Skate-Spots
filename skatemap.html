@@ -8,65 +8,69 @@
     <link href="css/hamburgers.css" rel="stylesheet">
 </head>
 
-<body><div id="container">
-    <nav><h1>SKATE SPOTS</h1>
-     <div class="nav-right hidden-xs">
-      <div class="button active" id="btn">
-        <div class="bar top"></div>
-        <div class="bar middle"></div>
-        <div class="bar bottom"></div>
-      </div>
-    </div>
-    </nav><div class="footercheat"></div>
-        <div  class="mainFooterContainer">
-            <div data-bind=" css3: footerwrapFix, css: {moveUp}, css4: {moveUpFix}, css2: {footerwrap}">
-                <div class="footercontrols">
-                    <div class="nearby">Photos near this location:
-                    <span data-bind="text: nearbyTitle"></span>
-                    </div>
-                    <div class="controlcontainer">
-                    <div class="caret" data-bind="visible: shouldShowCaretBtn"></div>
-                    <div class="close" data-bind="visible: shouldShowCloseBtn"></div>
-<!--                    <div class="closebutton"><img src="img/close.png" class="open-close"></div>-->
-                    </div>
-                </div>
-                <div class="flickrfooter">
-                </div>
-            
-            </div>
-        </div>
+<body>
+
     <div class="list">
-        <p>Type of Spot:<br><br>
-        <select class="dropdownmenu" data-bind="
+        <p>Type of Spot:
+            <br>
+            <br>
+            <select class="dropdownmenu" data-bind="
       options: spotType,
-      value: selectedType"></select></p>
-<!--   <p>You have selected <b><span data-bind="text:selectedType"></b></span>-->
+      value: selectedType"></select>
+        </p>
         <div data-bind='template: { foreach: listToShow,
                             beforeRemove: hidelistElement,
                             afterAdd: showlistElement }'>
-            <div class="listitem"><a data-bind="click: $parent.itemClick, text: title, attr: {'data-markerid': numid}" href="#" class="marker-link"></a>
+            <div class="listitem">
+                <a data-bind="click: $parent.itemClick, text: title, attr: {'data-markerid': numid}" href="#" class="marker-link"></a>
             </div>
         </div>
-        
-        
+
+
     </div>
-    <div id="maincontainer">
-        <div id="map"></div>
+
+    <div id="container">
+        <nav><h1>SKATE SPOTS</h1>
+            <div class="nav-right hidden-xs">
+                <div class="button" id="btn">
+                    <div class="bar top"></div>
+                    <div class="bar middle"></div>
+                    <div class="bar bottom"></div>
+                </div>
+            </div>
+        </nav>
+        <div class="nonmovingContainer">
+            <div class="maincontainer">
+                <div id="map"></div>
+                <div class="mainFooterContainer">
+                    <div data-bind=" css3: footerwrapFix, css: {moveUp}, css4: {moveUpFix}, css2: {footerwrap}">
+                        <div class="footercontrols">
+                            <div class="nearby">
+                                <span data-bind="text: nearbyTitle"></span>
+                            </div>
+                            <div class="controlcontainer">
+                                <div class="caret" data-bind="visible: shouldShowCaretBtn"></div>
+                                <div class="close" data-bind="visible: shouldShowCloseBtn"></div>
+                            </div>
+                        </div>
+                        <div class="flickrfooter">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    </div>
-<!--
-    <div id="flickrfooter"></div>
-    
--->
+
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/lib/jquery.min.js"></script>
     <script type="text/javascript" src="js/mapstyle.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
-<!--    <script type="text/javascript" src="js/googlemap.js"></script>-->
+    <!--    <script type="text/javascript" src="js/googlemap.js"></script>-->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXe2w6EI7WdulMjGkU5eCJu147CH7k19U&libraries=geometry&v=3&callback=initMap">
     </script>
     <script>
-//   
+        //
     </script>
 </body>
 
