@@ -63,28 +63,19 @@ var spots = ko.observableArray([{
     }
 ]);
 
-//function hideCaretshowClose(){
-//            $(".caret").hide();
-//            $(".close").show();
-//            footerOpen = true;
-//    };
 
 var ViewModel = function() {
 ////hamburger menu start////
 
         function toggleSidebar() {
             $(".button").toggleClass("active");
-            $(".maincontainer").toggleClass("maincontainer-move")
-//            $(".list").toggleClass("move-to-left");
-//            $(".sidebar-item").toggleClass("active");
-            console.log("togglesidebar")
-            //$(".mainFooterContainer").toggleClass("footerwrapbig");
+            $(".maincontainer").toggleClass("maincontainer-move");
+
             
         }
 
         $(".button").on("click tap", function() {
             toggleSidebar();
-            console.log("toggle");
         });
 
         $(document).keyup(function(e) {
@@ -109,51 +100,18 @@ var ViewModel = function() {
     this.nearbyTitle = ko.observable("Where is your session today?");
     this.footerwrapFix = ko.observable();
     this.footerwrap = ko.observable();
-
+    this.unclickable = ko.observable();
+    this.unclickableCSS = ko.observable();
     
-   
-   // self.footerwrap2('footerwrap');
-    //self.footerwrap(true);
+    
+    self.unclickable(true);
    self.footerwrapFix('footerwrapFix');
     
-     //// footer close button
+     //// footer open/close button
 
-//    $(".close").on("click tap", function() {
-//            //$(".footerwrap").removeClass("flickr-move-up ");
-//            self.moveUp(false);
-//            console.log("wtf")
-//            self.moveUpFix(false);
-//            self.footerwrap('');
-//            self.footerwrapFix('footerwrapFix');
-//            
-//           
-//            self.shouldShowCloseBtn(false);
-//            self.shouldShowCaretBtn(true);
-//            
-//           // $(this).hide();
-//            //$(".caret").show();
-//            footerOpen = false;
-//            footerclosebtn = true;
-//        });
-//    
-//    //// footer close button
-//    
-//    $(".caret").on("click tap", function() {
-//            //$(".footerwrap").addClass("flickr-move-up ");
-////            $(this).hide();
-////            $(".close").show();
-//           
-//            self.moveUp(false);
-//            self.moveUpFix(true);
-//            self.shouldShowCloseBtn(true);
-//            self.shouldShowCaretBtn(false);
-//            footerOpen = true;
-//        });
-    
-    ///the whole footer header bar will open and close the fox not just the close button
-    
+
+
     $(".footercontrols").on("click tap", function(){
-        
             if (footerOpen == false){
                 self.moveUpFix(true);
                 self.shouldShowCloseBtn(true);
@@ -168,7 +126,7 @@ var ViewModel = function() {
                 footerclosebtn = true;
             }
     });
-    
+
     this.listToShow = ko.pureComputed(function() {
         if (infowindowOpen === true && this.selectedType() !== largeInfowindow.marker.type) {
             largeInfowindow.close();
@@ -182,12 +140,7 @@ var ViewModel = function() {
         if (desiredType == "ALL") {
             return spots();
         } else {
-//            for (var i = 0; i < spots().length; i++) {
-//                if (spots()[i].type !== desiredType) {
-//                    // what is this for?
-//                    console.log("what is this for");
-//                }
-//            }
+
 
             return ko.utils.arrayFilter(spots(), function(spot) {
                 if (spot.type !== desiredType) {
@@ -209,17 +162,18 @@ var ViewModel = function() {
     // knockout controls the click function of the list
     this.itemClick = function(location) {
 
-
-
-//        if (footerclosebtn == true){
-//            console.log("what am i doing here?");
-//        }
-//        else {
             self.moveUp(true);
-            console.log("else bla bla")
+        if (footerOpen == true) {
             self.shouldShowCloseBtn(true);
-            self.shouldShowCaretBtn(false);       
-//        }
+            self.shouldShowCaretBtn(false);
+            
+        }
+        else {
+            self.shouldShowCloseBtn(false);
+            self.shouldShowCaretBtn(true);
+           
+        }
+
         self.footerimages(false);
         $('.infowndwimg').remove();
         google.maps.event.trigger(markers[this.numid], 'click');
@@ -262,7 +216,6 @@ ko.bindingHandlers.fadeVisible = {
 
 // Function to initialize the map within the map div
 function initMap() {
-    console.log("initMap start: footerOpen window open?" + footerOpen)
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
             lat: 37.7749,
@@ -318,7 +271,7 @@ function initMap() {
         marker.addListener('click', function() {
             var inthisfunc = this;
             infowindowOpen = true;
-            footerOpen = true;
+
             //populate the info window,make the marker bounce, reset flickr footer
             populateInfoWindow(this, largeInfowindow);
             
@@ -372,12 +325,11 @@ function initMap() {
             }).fail(function() {
                 $flickrfooter.append('<p style="text-align: center;">Sorry! The photo</p><p style="text-align: center;">could not be loaded</p>');
             });
-            console.log("footerOpen: " + footerOpen);
             
             //when marker clicked on, check to see if footer is open and do stuff
            if (footerclosebtn == false){
-                console.log("333433");
                 vm.moveUpFix(true);
+                footerOpen = true;
                 vm.shouldShowCloseBtn(true);
                 vm.shouldShowCaretBtn(false);
         }
