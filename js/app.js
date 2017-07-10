@@ -5,9 +5,9 @@ var infowindowOpen = false;
 var footerOpen = false;
 var footerclosebtn = false;
 var spots = ko.observableArray([{
-        title: 'Wallenberg 4 Step',
+        title: 'Wallenberg School',
         url: 'http://www.url.com',
-        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+        icon: 'img/stairs.png',
         type: 'STAIRS',
         numid: '0',
         location: {
@@ -18,8 +18,8 @@ var spots = ko.observableArray([{
     {
         title: 'Clipper Hubba',
         url: 'http://www.url.com',
-        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-        type: 'LEDGES',
+        icon: 'img/handrail.png',
+        type: 'HANDRAIL',
         numid: '1',
         location: {
             lat: 37.749408,
@@ -29,7 +29,7 @@ var spots = ko.observableArray([{
     {
         title: 'SOMA Skatepark',
         url: 'http://www.url.com',
-        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+        icon: 'img/skatepark.png',
         type: 'SKATEPARK',
         numid: '2',
         location: {
@@ -40,7 +40,7 @@ var spots = ko.observableArray([{
     {
         title: 'Pier 7 Stair Set',
         url: 'http://www.url.com',
-        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+        icon: 'img/stairs.png',
         type: 'STAIRS',
         numid: '3',
         location: {
@@ -51,7 +51,7 @@ var spots = ko.observableArray([{
     {
         title: 'Fort Miley Pyramids',
         url: 'http://www.url.com',
-        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+        icon: 'img/bank.png',
         type: 'BANK',
         numid: '4',
         location: {
@@ -139,7 +139,7 @@ var ViewModel = function() {
         }
     }, this);
 
-    this.spotType = ko.observableArray(['ALL', 'STAIRS', 'LEDGES', 'BANK', 'SKATEPARK']);
+    this.spotType = ko.observableArray(['ALL', 'STAIRS', 'HANDRAIL', 'BANK', 'SKATEPARK']);
     // knockout controls the click function of the list
     this.itemClick = function(location) {
         self.moveUp(true);
