@@ -2,11 +2,10 @@ var marker;
 var markers = [];
 var infowindow;
 var infowindowOpen = false;
-var footerOpen = false
+var footerOpen = false;
 var footerclosebtn = false;
 var spots = ko.observableArray([{
         title: 'Wallenberg 4 Step',
-        name: 'bbbbbb',
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
         type: 'STAIRS',
@@ -18,7 +17,6 @@ var spots = ko.observableArray([{
     },
     {
         title: 'Clipper Hubba',
-        name: 'ccccc',
         url: 'http://www.url.com',
         icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
         type: 'LEDGES',
@@ -63,32 +61,8 @@ var spots = ko.observableArray([{
     }
 ]);
 
-
 var ViewModel = function() {
-////hamburger menu start////
-
-        function toggleSidebar() {
-            $(".button").toggleClass("active");
-            $(".maincontainer").toggleClass("maincontainer-move");
-
-            
-        }
-
-        $(".button").on("click tap", function() {
-            toggleSidebar();
-        });
-
-        $(document).keyup(function(e) {
-            if (e.keyCode === 27) {
-                toggleSidebar();
-            }
-        });
-    
-    /////// hamburger end////
-    
     var self = this;
-    //var selectedCountry = ko.observable();
-    //this.footerOpen = ko.observable(false);
     this.displayMessage = ko.observable(true);
     this.selectedType = ko.observable("ALL");
     this.displayAdvancedOptions = ko.observable(false);
@@ -102,31 +76,42 @@ var ViewModel = function() {
     this.footerwrap = ko.observable();
     this.unclickable = ko.observable();
     this.unclickableCSS = ko.observable();
-    
-    
     self.unclickable(true);
-   self.footerwrapFix('footerwrapFix');
+    self.footerwrapFix('footerwrapFix');
+
+    // footer open/close button
+    $(".footercontrols").on("click tap", function() {
+        if (footerOpen == false) {
+            self.moveUpFix(true);
+            self.shouldShowCloseBtn(true);
+            self.shouldShowCaretBtn(false);
+            footerOpen = true;
+        } else {
+            self.moveUpFix(false);
+            self.shouldShowCloseBtn(false);
+            self.shouldShowCaretBtn(true);
+            footerOpen = false;
+            footerclosebtn = true;
+        }
+    });
     
-     //// footer open/close button
+    //hamburger menu start
+    function toggleSidebar() {
+        $(".button").toggleClass("active");
+        $(".maincontainer").toggleClass("maincontainer-move");
+    }
 
-
-
-    $(".footercontrols").on("click tap", function(){
-            if (footerOpen == false){
-                self.moveUpFix(true);
-                self.shouldShowCloseBtn(true);
-                self.shouldShowCaretBtn(false);
-                footerOpen = true;
-            }
-            else {
-                self.moveUpFix(false);
-                self.shouldShowCloseBtn(false);
-                self.shouldShowCaretBtn(true);
-                footerOpen = false;
-                footerclosebtn = true;
-            }
+    $(".button").on("click tap", function() {
+        toggleSidebar();
     });
 
+    $(document).keyup(function(e) {
+        if (e.keyCode === 27) {
+            toggleSidebar();
+        }
+    });
+
+    ////the drop down filter////
     this.listToShow = ko.pureComputed(function() {
         if (infowindowOpen === true && this.selectedType() !== largeInfowindow.marker.type) {
             largeInfowindow.close();
@@ -135,13 +120,11 @@ var ViewModel = function() {
         for (var k = 0; k < markers.length; k++) {
             markers[k].setVisible(true);
         }
-        
+
         var desiredType = this.selectedType();
         if (desiredType == "ALL") {
             return spots();
         } else {
-
-
             return ko.utils.arrayFilter(spots(), function(spot) {
                 if (spot.type !== desiredType) {
                     for (var i = 0; i < spots().length; i++) {
@@ -149,11 +132,9 @@ var ViewModel = function() {
                             markers[i].setVisible(false);
                         }
                     }
-
                 }
-
+                
                 return spot.type == desiredType;
-
             });
         }
     }, this);
@@ -161,28 +142,23 @@ var ViewModel = function() {
     this.spotType = ko.observableArray(['ALL', 'STAIRS', 'LEDGES', 'BANK', 'SKATEPARK']);
     // knockout controls the click function of the list
     this.itemClick = function(location) {
-
-            self.moveUp(true);
+        self.moveUp(true);
         if (footerOpen == true) {
             self.shouldShowCloseBtn(true);
             self.shouldShowCaretBtn(false);
-            
-        }
-        else {
+
+        } else {
             self.shouldShowCloseBtn(false);
             self.shouldShowCaretBtn(true);
-           
         }
 
         self.footerimages(false);
         $('.infowndwimg').remove();
         google.maps.event.trigger(markers[this.numid], 'click');
         self.nearbyTitle("Photos near this location: " + this.title);
-
-
     };
 
-    // Animation callbacks for the  list
+    // Animation for the list
     this.showlistElement = function(elem) {
         if (elem.nodeType === 1) $(elem).hide().slideDown();
     };
@@ -194,11 +170,12 @@ var ViewModel = function() {
     };
 
 };
-/// fixes the problem with multiple css bindings
+// fixes the problem with multiple css bindings
 ko.bindingHandlers['css2'] = ko.bindingHandlers.css;
 ko.bindingHandlers['css3'] = ko.bindingHandlers.css;
 ko.bindingHandlers['css4'] = ko.bindingHandlers.css;
 
+//fade some elements
 ko.bindingHandlers.fadeVisible = {
     init: function(element, valueAccessor) {
         // Initially set the element to be instantly visible/hidden depending on the value
@@ -213,7 +190,6 @@ ko.bindingHandlers.fadeVisible = {
     }
 };
 
-
 // Function to initialize the map within the map div
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -224,20 +200,20 @@ function initMap() {
         zoom: 10,
         styles: styles,
         mapTypeControlOptions: {
-                  style: google.maps.MapTypeControlStyle.DEFAULT,
-                  position:google.maps.ControlPosition.TOP_RIGHT,
-                  
-               },
+            style: google.maps.MapTypeControlStyle.DEFAULT,
+            position: google.maps.ControlPosition.TOP_RIGHT,
+
+        },
         zoomControl: true,
-          zoomControlOptions: {
-              position: google.maps.ControlPosition.RIGHT_TOP
-          },
+        zoomControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_TOP
+        },
         streetViewControlOptions: {
-              position: google.maps.ControlPosition.RIGHT_TOP
-          }
-        
+            position: google.maps.ControlPosition.RIGHT_TOP
+        }
+
     });
-    
+
     // Create a single latLng literal object.
     largeInfowindow = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
@@ -250,7 +226,7 @@ function initMap() {
         var type = spots()[i].type;
         var lat = spots()[i].location.lat;
         var lng = spots()[i].location.lng;
-        //var that = this;
+        
         // Create a marker per location, and put into markers array.
         marker = new google.maps.Marker({
             map: map,
@@ -274,8 +250,8 @@ function initMap() {
 
             //populate the info window,make the marker bounce, reset flickr footer
             populateInfoWindow(this, largeInfowindow);
-            
-             $('.infowndwimg').remove();
+
+            $('.infowndwimg').remove();
             this.setAnimation(google.maps.Animation.BOUNCE);
             vm.nearbyTitle("Photos near this location: " + this.title);
             setTimeout(function() {
@@ -287,7 +263,6 @@ function initMap() {
     }
 
     // fits the marker area into the browser window
-    
     map.fitBounds(bounds);
 
     //populate info window with 
@@ -309,37 +284,30 @@ function initMap() {
                 'format': 'json',
                 'nojsoncallback': 1
             });
-            console.log("getflickrimage: " + flickrURL);
             //add the returned photos to the footer
             $.getJSON(flickrURL, function(data) {
-
-
                 for (var j = 0; j < data.photos.photo.length; j++) {
                     var photofeed = data.photos.photo[j];
-                    //var $flickrfooter2 = $('#flickrfooter');
                     $('.flickrfooter').append('<img class="infowndwimg" src="https://farm' + photofeed.farm + '.staticflickr.com/' + photofeed.server + '/' + photofeed.id + '_' + photofeed.secret + '_n.jpg">');
                 }
                 var detail = data.photos.photo[0];
-                //var $flickrfooter = $('#flickrfooter');
                 $('.flickrfooter').append('<img class="infowndwimg" src="https://farm' + detail.farm + '.staticflickr.com/' + detail.server + '/' + detail.id + '_' + detail.secret + '_n.jpg">');
             }).fail(function() {
                 $flickrfooter.append('<p style="text-align: center;">Sorry! The photo</p><p style="text-align: center;">could not be loaded</p>');
             });
-            
+
             //when marker clicked on, check to see if footer is open and do stuff
-           if (footerclosebtn == false){
+            if (footerclosebtn == false) {
                 vm.moveUpFix(true);
                 footerOpen = true;
                 vm.shouldShowCloseBtn(true);
                 vm.shouldShowCaretBtn(false);
-        }
-              
-        }
+            }
 
+        }
 
         getFlickrImage();
-
-
+        
         // Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker != marker) {
             infowindow.setContent('');
@@ -347,17 +315,13 @@ function initMap() {
 
             // infowindow listens for a closed click
             infowindow.addListener('closeclick', function() {
-                //var $flickrfooter2 = $('.infowndwimg');
-                //$('.infowndwimg').remove();
                 infowindowOpen = false;
                 footerOpen = false;
             });
 
             var streetViewService = new google.maps.StreetViewService();
             var radius = 50;
-            // In case the status is OK, which means the pano was found, compute the
-            // position of the streetview image, then calculate the heading, then get a
-            // panorama from that and set the options
+            // compute the position of the streetview image
             function getStreetView(data, status) {
                 if (status == google.maps.StreetViewStatus.OK) {
                     var nearStreetViewLocation = data.location.latLng;
@@ -381,10 +345,8 @@ function initMap() {
             // Use streetview service to get the closest streetview image within
             // 50 meters of the markers position
             streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-
-            // Open the infowindow on the correct marker.
-
         }
+        // Open the infowindow on the correct marker.
         infowindow.open(map, marker);
     }
 }
