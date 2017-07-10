@@ -45,8 +45,6 @@ nav {
     height: 240px;
     position: relative;
     bottom: -260px !important;
-    /*    left: 220px;*/
-    
     -webkit-transition: transform .7s ease-in-out;
     -moz-transition: transform .7s ease-in-out;
     -ms-transition: transform .7s ease-in-out;
@@ -63,8 +61,6 @@ nav {
     transition: transform .7s ease-in-out;
 }
 .footerwrapbig {
-    /*    width: 50%;*/
-    
     -webkit-transition: transform .66s ease-in-out;
     -moz-transition: transform .66s ease-in-out;
     -ms-transition: transform .66s ease-in-out;
@@ -76,7 +72,6 @@ nav {
     -o-transform: translateX(-220px);
     transform: translateX(-220px);
     width: 100%;
-    /*    left:0px;*/
 }
 .footercontrols {
     background-color: white;
@@ -105,8 +100,6 @@ nav {
     left: 0px;
     overflow-x: scroll;
     white-space: nowrap;
-    /*    bottom: -200px;*/
-    
     display: table-cell;
     vertical-align: bottom;
     -webkit-transition: transform .3s ease-in-out;
@@ -140,8 +133,6 @@ nav {
     display: inline;
 }
 .controlcontainer {
-    /*    padding-right: 120px;*/
-    
     float: right;
     width: 100px;
 }
@@ -151,7 +142,6 @@ nav {
     cursor: pointer;
 }
 .list {
-    /*    z-index: 1;*/
     pointer-events: all;
     width: 200px;
     background-color: #3b3b3b;
@@ -174,8 +164,6 @@ nav {
     width: 100%;
     overflow: hidden;
 }
-/*includes map and footer with images*/
-
 .maincontainer {
     position: relative;
     pointer-events: all;
@@ -243,8 +231,7 @@ select {
     width: 85%;
     color: white;
 }
-/*this is the hamburgermenu test*/
-
+/*hamburgermenu*/
 .bar {
     display: block;
     height: 3px;
@@ -271,19 +258,6 @@ select {
     -o-transform: translateX(-240px);
     transform: translateX(-240px);
 }
-/*
-  .nav-right {
-        position: absolute;
-    }
-    .hidden-xs {
-        display: block;
-    }
-    .visible-xs {
-        display: none;
-    }
-
-*/
-
 .nav-right {
     position: absolute;
     left: 20px;
@@ -361,7 +335,6 @@ select {
     transition: all 1s ease;
 }
 /*caret open button*/
-
 .caret {
     position: absolute;
     top: 14px;
@@ -387,7 +360,6 @@ select {
     border-right: 10px solid transparent;
 }
 /*close button*/
-
 .close {
     cursor: pointer;
     position: absolute;
@@ -456,6 +428,5 @@ select {
     
     .gm-style-iw {
     height: 200px;
-}
-    
+}    
 }
