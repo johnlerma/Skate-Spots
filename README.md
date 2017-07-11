@@ -8,7 +8,7 @@ The google map includes a handy filter, so you can filter spots by skatepark, ba
 
 ## Installation
 
-Download the zip folder and decompress it. Open Index.html in any browser to use. 
+Download the zip folder and decompress it. Start a local server and open Index.html in any browser to use. 
 
 ## Technologies Used
 
