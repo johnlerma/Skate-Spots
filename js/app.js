@@ -4,6 +4,7 @@ var infowindow;
 var infowindowOpen = false;
 var footerOpen = false;
 var footerclosebtn = false;
+var drawerinit = true;
 var spots = ko.observableArray([{
         title: 'Wallenberg School',
         url: 'http://www.url.com',
@@ -70,18 +71,17 @@ var ViewModel = function() {
     this.shouldShowCaretBtn = ko.observable(false);
     this.footerimages = ko.observable(false);
     this.moveUp = ko.observable();
-    this.moveUpFix = ko.observable();
+    this.moveUpFix = ko.observable(false);
     this.nearbyTitle = ko.observable("Where is your session today?");
     this.footerwrapFix = ko.observable();
     this.footerwrap = ko.observable();
     this.unclickable = ko.observable();
-    this.unclickableCSS = ko.observable();
-    self.unclickable(true);
-    self.footerwrapFix('footerwrapFix');
+    this.unclickable(true);
+    this.footerwrapFix('footerwrapFix');
 
     // footer open/close button
     $(".footercontrols").on("click tap", function() {
-        if (footerOpen == false) {
+        if (footerOpen === false) {
             self.moveUpFix(true);
             self.shouldShowCloseBtn(true);
             self.shouldShowCaretBtn(false);
@@ -142,8 +142,12 @@ var ViewModel = function() {
     this.spotType = ko.observableArray(['ALL', 'STAIRS', 'HANDRAIL', 'BANK', 'SKATEPARK']);
     // knockout controls the click function of the list
     this.itemClick = function(location) {
-        self.moveUp(true);
-        if (footerOpen == true) {
+        //self.moveUp(true);
+        console.log("aldkfaldkfjaldkfj");
+        if (drawerinit === true) {
+            self.unclickable(false);
+        }
+        if (footerOpen === true) {
             self.shouldShowCloseBtn(true);
             self.shouldShowCaretBtn(false);
 
@@ -170,10 +174,6 @@ var ViewModel = function() {
     };
 
 };
-// fixes the problem with multiple css bindings
-ko.bindingHandlers['css2'] = ko.bindingHandlers.css;
-ko.bindingHandlers['css3'] = ko.bindingHandlers.css;
-ko.bindingHandlers['css4'] = ko.bindingHandlers.css;
 
 //fade some elements
 ko.bindingHandlers.fadeVisible = {
@@ -192,6 +192,7 @@ ko.bindingHandlers.fadeVisible = {
 
 // Function to initialize the map within the map div
 function initMap() {
+    var self = this;
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
             lat: 37.7749,
@@ -242,25 +243,32 @@ function initMap() {
 
         // Push the marker to our array of markers.
         markers.push(marker);
-
-        // Create an onclick event to open an infowindow at each marker.
-        marker.addListener('click', function() {
-            var inthisfunc = this;
-            infowindowOpen = true;
-
-            //populate the info window,make the marker bounce, reset flickr footer
-            populateInfoWindow(this, largeInfowindow);
-
-            $('.infowndwimg').remove();
-            this.setAnimation(google.maps.Animation.BOUNCE);
-            vm.nearbyTitle("Photos near this location: " + this.title);
-            setTimeout(function() {
-                inthisfunc.setAnimation(null);
-            }, 750);
-
-        });
+        
+        //add a click listener to the marker
+        marker.addListener('click', markerclick);
+       
         bounds.extend(markers[i].position);
     }
+    
+    // 
+    function markerclick(){
+        var that = this;
+         if (drawerinit === true) {
+            vm.unclickable(false);
+        }
+        infowindowOpen = true;
+        populateInfoWindow(this, largeInfowindow);
+        $('.infowndwimg').remove();
+        this.setAnimation(google.maps.Animation.BOUNCE);
+        if (footerclosebtn === false){
+        vm.moveUpFix(true);
+        }
+        vm.nearbyTitle("Photos near this location: " + this.title);
+         setTimeout(function() {
+                that.setAnimation(null);
+            }, 750);
+    }
+
 
     // fits the marker area into the browser window
     map.fitBounds(bounds);
@@ -297,7 +305,7 @@ function initMap() {
             });
 
             //when marker clicked on, check to see if footer is open and do stuff
-            if (footerclosebtn == false) {
+            if (footerclosebtn === false) {
                 vm.moveUpFix(true);
                 footerOpen = true;
                 vm.shouldShowCloseBtn(true);
@@ -322,7 +330,8 @@ function initMap() {
             var streetViewService = new google.maps.StreetViewService();
             var radius = 50;
             // compute the position of the streetview image
-            function getStreetView(data, status) {
+//            function getStreetView(data, status) {
+            var getStreetView = function(data, status) {
                 if (status == google.maps.StreetViewStatus.OK) {
                     var nearStreetViewLocation = data.location.latLng;
                     var heading = google.maps.geometry.spherical.computeHeading(nearStreetViewLocation, marker.position);
@@ -341,7 +350,7 @@ function initMap() {
                     infowindow.setContent('<div class="panoTitle">' + marker.title + '</div>' +
                         '<div>No Street View Found</div>');
                 }
-            }
+            };
             // Use streetview service to get the closest streetview image within
             // 50 meters of the markers position
             streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
