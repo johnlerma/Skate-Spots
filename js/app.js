@@ -5,62 +5,6 @@ var infowindowOpen = false;
 var footerOpen = false;
 var footerclosebtn = false;
 var drawerinit = true;
-var spots = ko.observableArray([{
-        title: 'Wallenberg School',
-        url: 'http://www.url.com',
-        icon: 'img/stairs.png',
-        type: 'STAIRS',
-        numid: '0',
-        location: {
-            lat: 37.7802,
-            lng: -122.446864
-        }
-    },
-    {
-        title: 'Clipper Hubba',
-        url: 'http://www.url.com',
-        icon: 'img/handrail.png',
-        type: 'HANDRAIL',
-        numid: '1',
-        location: {
-            lat: 37.749408,
-            lng: -122.43222
-        }
-    },
-    {
-        title: 'SOMA Skatepark',
-        url: 'http://www.url.com',
-        icon: 'img/skatepark.png',
-        type: 'SKATEPARK',
-        numid: '2',
-        location: {
-            lat: 37.770092,
-            lng: -122.421468
-        }
-    },
-    {
-        title: 'Pier 7 Stair Set',
-        url: 'http://www.url.com',
-        icon: 'img/stairs.png',
-        type: 'STAIRS',
-        numid: '3',
-        location: {
-            lat: 37.798694,
-            lng: -122.396752
-        }
-    },
-    {
-        title: 'Fort Miley Pyramids',
-        url: 'http://www.url.com',
-        icon: 'img/bank.png',
-        type: 'BANK',
-        numid: '4',
-        location: {
-            lat: 37.783255,
-            lng: -122.508833
-        }
-    }
-]);
 
 var ViewModel = function() {
     var self = this;
@@ -81,8 +25,8 @@ var ViewModel = function() {
     this.footerwrapFix('footerwrapFix');
 
     // footer open/close button
-    $(".footercontrols").on("click tap", function() {
-        if (footerOpen === false) {
+    footerControlFunction = function(){
+                if (footerOpen === false) {
             self.moveUpFix(true);
             self.shouldShowCloseBtn(true);
             self.shouldShowCaretBtn(false);
@@ -94,8 +38,9 @@ var ViewModel = function() {
             footerOpen = false;
             footerclosebtn = true;
         }
-    });
-    
+    }
+
+//    
     //hamburger menu start
     function toggleSidebar() {
         $(".button").toggleClass("active");
