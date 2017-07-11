@@ -39,8 +39,7 @@ var ViewModel = function() {
             footerclosebtn = true;
         }
     };
-
-//    
+ 
     //hamburger menu start
     function toggleSidebar() {
         $(".button").toggleClass("active");
@@ -235,9 +234,7 @@ function initMap() {
                 for (var j = 0; j < data.photos.photo.length; j++) {
                     var photofeed = data.photos.photo[j];
                     var flickrimgs = ('https://farm' + photofeed.farm + '.staticflickr.com/' + photofeed.server + '/' + photofeed.id + '_' + photofeed.secret + '_n.jpg');
-//                    console.log("flickrimgs: " + flickrimgs);
                     vm.flickrImgArray.push( flickrimgs);
-//                    console.log(vm.flickrImgArray());
                 }
 
             }).fail(function() {
