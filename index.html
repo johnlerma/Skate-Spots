@@ -48,7 +48,7 @@
                 <div class="mainFooterContainer">
                     <footer data-bind=" css: {footerwrapfix:true,  moveUpFix, unclickable}">
 <!--                    <div data-bind=" css3: footerwrapFix, css: {unclickableCSS}, css4: {moveUpFix}, css2: {footerwrap}">-->
-                        <div class="footercontrols">
+                        <div class="footercontrols" data-bind="click: footerControlFunction">
                             <div class="nearby">
                                 <span data-bind="text: nearbyTitle"></span>
                             </div>
@@ -70,6 +70,7 @@
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/mapstyle.js"></script>
+    <script src="js/getjsondata.js"></script>
     <script src="js/app.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXe2w6EI7WdulMjGkU5eCJu147CH7k19U&libraries=geometry&v=3&callback=initMap" onerror="mapError()">
     </script>
