@@ -38,7 +38,7 @@ var ViewModel = function() {
             footerOpen = false;
             footerclosebtn = true;
         }
-    }
+    };
 
 //    
     //hamburger menu start
