@@ -73,6 +73,7 @@ var ViewModel = function() {
     this.moveUp = ko.observable();
     this.moveUpFix = ko.observable(false);
     this.nearbyTitle = ko.observable("Where is your session today?");
+    this.flickrImgArray = ko.observableArray();
     this.footerwrapFix = ko.observable();
     this.footerwrap = ko.observable();
     this.unclickable = ko.observable();
@@ -103,12 +104,6 @@ var ViewModel = function() {
 
     $(".button").on("click tap", function() {
         toggleSidebar();
-    });
-
-    $(document).keyup(function(e) {
-        if (e.keyCode === 27) {
-            toggleSidebar();
-        }
     });
 
     ////the drop down filter////
@@ -142,8 +137,6 @@ var ViewModel = function() {
     this.spotType = ko.observableArray(['ALL', 'STAIRS', 'HANDRAIL', 'BANK', 'SKATEPARK']);
     // knockout controls the click function of the list
     this.itemClick = function(location) {
-        //self.moveUp(true);
-        console.log("aldkfaldkfjaldkfj");
         if (drawerinit === true) {
             self.unclickable(false);
         }
@@ -157,7 +150,6 @@ var ViewModel = function() {
         }
 
         self.footerimages(false);
-        $('.infowndwimg').remove();
         google.maps.event.trigger(markers[this.numid], 'click');
         self.nearbyTitle("Photos near this location: " + this.title);
     };
@@ -258,7 +250,7 @@ function initMap() {
         }
         infowindowOpen = true;
         populateInfoWindow(this, largeInfowindow);
-        $('.infowndwimg').remove();
+        vm.flickrImgArray.removeAll();
         this.setAnimation(google.maps.Animation.BOUNCE);
         if (footerclosebtn === false){
         vm.moveUpFix(true);
@@ -292,16 +284,21 @@ function initMap() {
                 'format': 'json',
                 'nojsoncallback': 1
             });
+            
             //add the returned photos to the footer
             $.getJSON(flickrURL, function(data) {
                 for (var j = 0; j < data.photos.photo.length; j++) {
                     var photofeed = data.photos.photo[j];
-                    $('.flickrfooter').append('<img class="infowndwimg" src="https://farm' + photofeed.farm + '.staticflickr.com/' + photofeed.server + '/' + photofeed.id + '_' + photofeed.secret + '_n.jpg">');
+                    var flickrimgs = ('https://farm' + photofeed.farm + '.staticflickr.com/' + photofeed.server + '/' + photofeed.id + '_' + photofeed.secret + '_n.jpg');
+//                    console.log("flickrimgs: " + flickrimgs);
+                    vm.flickrImgArray.push( flickrimgs);
+//                    console.log(vm.flickrImgArray());
                 }
-                var detail = data.photos.photo[0];
-                $('.flickrfooter').append('<img class="infowndwimg" src="https://farm' + detail.farm + '.staticflickr.com/' + detail.server + '/' + detail.id + '_' + detail.secret + '_n.jpg">');
+
             }).fail(function() {
-                $flickrfooter.append('<p style="text-align: center;">Sorry! The photo</p><p style="text-align: center;">could not be loaded</p>');
+             // change close button here
+                vm.moveUpFix(false);
+               alert("Flickr feed is unavailable.");
             });
 
             //when marker clicked on, check to see if footer is open and do stuff
@@ -364,7 +361,10 @@ function initMap() {
 var vm = new ViewModel();
 ko.applyBindings(vm);
 
-
+mapError = () => {
+  // Error handling
+    alert("Sorry Google Maps is not available. Please check back at a later time.");
+};
 
 function googleError(e) {
     alert("Google Maps cannot be loaded at this time");
