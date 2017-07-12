@@ -8,7 +8,20 @@ The google map includes a handy filter, so you can filter spots by skatepark, ba
 
 ## Installation
 
-Download the zip folder and decompress it. Start a local server and open Index.html in any browser to use. 
+Download the zip folder and decompress it. Start a local server on your computer. 
+
+For mac open the Terminal, navigate to the index.html location and type:
+
+```
+python -m SimpleHTTPServer 8080
+```
+For windows, open the Command Line, navigate to the index.html location and type:
+
+```
+python -m http.server [8080]
+```
+
+Now open Index.html in any browser to use. 
 
 ## Technologies Used
 
