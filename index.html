@@ -2,7 +2,7 @@
 
 <head>
      <title>Skate Spots</title>
-    <meta name="description" content="Skate Spot Map" />
+    <meta name="description" content="Skate Spot Map">
     <meta name="author" content="//johnlerma.com">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
@@ -42,12 +42,12 @@
                 </div>
             </div>
         </nav>
-        <div class="nonmovingContainer">
+        <div class="nonmoving-container">
             <main class="maincontainer">
                 <div id="map"></div>
-                <div class="mainFooterContainer">
-                    <footer data-bind=" css: {footerwrapfix:true,  moveUpFix, unclickable}">
-<!--                    <div data-bind=" css3: footerwrapFix, css: {unclickableCSS}, css4: {moveUpFix}, css2: {footerwrap}">-->
+                <div class="main-footer-container">
+                    <footer data-bind=" css: {footerwrapfix:true,  moveupfix, unclickable}">
+<!--                    <div data-bind=" css3: footerwrapfix, css: {unclickableCSS}, css4: {moveupfix}, css2: {footerwrap}">-->
                         <div class="footercontrols" data-bind="click: footerControlFunction">
                             <div class="nearby">
                                 <span data-bind="text: nearbyTitle"></span>
@@ -72,7 +72,7 @@
     <script src="js/mapstyle.js"></script>
     <script src="js/getjsondata.js"></script>
     <script src="js/app.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXe2w6EI7WdulMjGkU5eCJu147CH7k19U&libraries=geometry&v=3&callback=initMap" onerror="mapError()">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXe2w6EI7WdulMjGkU5eCJu147CH7k19U&libraries=geometry&v=3&callback=fetchLocations" onerror="mapError()">
     </script>
     <script>
     </script>
