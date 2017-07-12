@@ -15,24 +15,24 @@ var ViewModel = function() {
     this.shouldShowCaretBtn = ko.observable(false);
     this.footerimages = ko.observable(false);
     this.moveUp = ko.observable();
-    this.moveUpFix = ko.observable(false);
+    this.moveupfix = ko.observable(false);
     this.nearbyTitle = ko.observable("Where is your session today?");
     this.flickrImgArray = ko.observableArray();
-    this.footerwrapFix = ko.observable();
+    this.footerwrapfix = ko.observable();
     this.footerwrap = ko.observable();
     this.unclickable = ko.observable();
     this.unclickable(true);
-    this.footerwrapFix('footerwrapFix');
+    this.footerwrapfix('footerwrapfix');
 
     // footer open/close button
     footerControlFunction = function(){
                 if (footerOpen === false) {
-            self.moveUpFix(true);
+            self.moveupfix(true);
             self.shouldShowCloseBtn(true);
             self.shouldShowCaretBtn(false);
             footerOpen = true;
         } else {
-            self.moveUpFix(false);
+            self.moveupfix(false);
             self.shouldShowCloseBtn(false);
             self.shouldShowCaretBtn(true);
             footerOpen = false;
@@ -197,7 +197,7 @@ function initMap() {
         vm.flickrImgArray.removeAll();
         this.setAnimation(google.maps.Animation.BOUNCE);
         if (footerclosebtn === false){
-        vm.moveUpFix(true);
+        vm.moveupfix(true);
         }
         vm.nearbyTitle("Photos near this location: " + this.title);
          setTimeout(function() {
@@ -239,13 +239,13 @@ function initMap() {
 
             }).fail(function() {
              // change close button here
-                vm.moveUpFix(false);
+                vm.moveupfix(false);
                alert("Flickr feed is unavailable.");
             });
 
             //when marker clicked on, check to see if footer is open and do stuff
             if (footerclosebtn === false) {
-                vm.moveUpFix(true);
+                vm.moveupfix(true);
                 footerOpen = true;
                 vm.shouldShowCloseBtn(true);
                 vm.shouldShowCaretBtn(false);
@@ -307,8 +307,3 @@ mapError = () => {
   // Error handling
     alert("Sorry Google Maps is not available. Please check back at a later time.");
 };
-
-function googleError(e) {
-    alert("Google Maps cannot be loaded at this time");
-    console.log(e);
-}
