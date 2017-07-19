@@ -26,3 +26,8 @@ Now open Index.html in any browser to use.
 ## Technologies Used
 
 Google Maps, Flickr, jquery, Knockout-3.2.0
+
+
+## Screenshot
+
+![screenshot](https://github.com/johnlerma/Skate-Spots/blob/master/gitimages/skatespots_mainimage.png "Screenshot")
